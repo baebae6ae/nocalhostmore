@@ -5,9 +5,15 @@
 
    톤: SaaS 랜딩 템플릿(보라-파랑 그라디언트, 다크 디폴트)을 피하고
    기술 매뉴얼/터미널에 가까운 편집 스타일을 쓴다. 그라디언트 없음,
-   액센트 색 하나만 절제해서 사용, 헤딩은 세리프·본문은 시스템 산세리프·
-   라벨/코드는 모노스페이스. 라이트를 기본으로, 다크는 OS 설정을 따른다.
+   액센트 색 하나만 절제해서 사용, 헤딩은 세리프(Hahmlet)·본문은
+   IBM Plex Sans KR·라벨/코드는 IBM Plex Mono. 라이트가 기본,
+   다크는 OS 설정을 따른다.
    ============================================================ */
+/* 한글 세리프/산세리프는 시스템에 없는 경우가 대부분이라 웹폰트로 고정한다.
+   (이전 스택의 Iowan Old Style·Georgia는 한글 글리프가 없어 헤딩이
+   시스템 고딕으로 떨어지던 문제가 있었음) */
+@import url("https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
 :root {
   --bg: #faf7f2;
   --bg-soft: #f2ede3;
@@ -28,10 +34,10 @@
   --radius: 8px;
   --shadow: 0 6px 20px rgba(34, 29, 22, 0.08);
 
-  --font-serif: "Iowan Old Style", "Noto Serif KR", "Apple SD Gothic Neo", Georgia, serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
-    "Malgun Gothic", "Noto Sans KR", sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --font-serif: "Hahmlet", "Noto Serif KR", "Apple SD Gothic Neo", Georgia, serif;
+  --font-sans: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -66,8 +72,9 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 14.5px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: -0.011em; /* Plex Sans KR은 살짝 좁혀야 한글이 단정해 보인다 */
   -webkit-font-smoothing: antialiased;
 }
 

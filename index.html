@@ -36,25 +36,38 @@
     </nav>
 
     <header class="hero">
-      <div class="wrap">
-        <span class="eyebrow">nocalhostmore</span>
-        <h1>
-          기능은 AI가 짜고,<br />
-          <span class="accent">뼈대는 미리 정해둔다.</span>
-        </h1>
-        <p class="lead">
-          "상태 관리", "멀티 테넌시" 같은 말을 몰라도 됩니다. 몇 가지 질문에 답하면 그 답을 상태 관리·보안·배포
-          규칙으로 바꿔, AI가 처음부터 프로덕션을 염두에 두고 코드를 짜게 만드는 프롬프트를 만들어 드립니다.
-        </p>
-        <div class="hero-actions">
-          <a class="btn-hero" href="app.html">프롬프트 만들기</a>
-          <a class="btn-hero ghost" href="guides/index.html">가이드 보기</a>
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">nocalhostmore — 로컬호스트에서 멈추지 않기</span>
+          <h1>
+            기능은 AI가 짜고,<br />
+            <span class="accent">뼈대는 미리 정해둔다.</span>
+          </h1>
+          <p class="lead">
+            "상태 관리", "멀티 테넌시" 같은 말을 몰라도 됩니다. 몇 가지 질문에 답하면 그 답을 상태 관리·보안·배포
+            규칙으로 바꿔, AI가 처음부터 프로덕션을 염두에 두고 코드를 짜게 만드는 프롬프트를 만들어 드립니다.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-hero" href="app.html">프롬프트 만들기</a>
+            <a class="btn-hero ghost" href="guides/index.html">가이드 보기</a>
+          </div>
+        </div>
+        <div class="hero-demo" aria-hidden="true">
+          <div class="demo-bar"><i></i><i></i><i></i><em>checklist → prompt</em></div>
+          <div class="demo-body">
+            <div class="demo-line"><span class="demo-q">누가 쓰나요?</span><span class="demo-a">여러 명이 함께</span></div>
+            <div class="demo-line"><span class="demo-q">비밀 키가 있나요?</span><span class="demo-a">.env로 분리</span></div>
+            <div class="demo-line"><span class="demo-q">파일 업로드는?</span><span class="demo-a">UUID + 용량 검증</span></div>
+            <div class="demo-line"><span class="demo-q">기록 저장은?</span><span class="demo-a">DB · 세션 격리</span></div>
+            <div class="demo-result">→ 프로덕션 가드레일 프롬프트 생성 완료</div>
+          </div>
         </div>
       </div>
     </header>
 
     <main class="wrap">
       <section class="section">
+        <p class="kicker">problem</p>
         <h2>대부분 문제는 설계에서 시작된다</h2>
         <p class="sub">
           기능 구현에만 매달리다 보면 여러 명이 접속했을 때 데이터가 섞이고, API 키가 새어나가고, 배포하면 파일이
@@ -87,6 +100,7 @@
       <div class="ad-slot" data-ad-slot=""></div>
 
       <section class="section" id="how">
+        <p class="kicker">workflow</p>
         <h2>3단계</h2>
         <p class="sub">설정 없이, 답하고 복사하면 됩니다.</p>
         <div class="steps">
@@ -106,6 +120,7 @@
       </section>
 
       <section class="section">
+        <p class="kicker">pricing</p>
         <h2>가격</h2>
         <p class="sub">프롬프트 생성은 항상 무료입니다. 실행 가능한 프로젝트 뼈대가 필요하면 Pro를 씁니다.</p>
         <div class="pricing">

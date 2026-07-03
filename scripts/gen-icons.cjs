@@ -1,9 +1,10 @@
 /**
  * gen-icons.cjs
  * 의존성 없이 PNG 아이콘을 생성한다. (Node 내장 zlib만 사용)
- * 평평한 잉크색 배경 + 터미널 프롬프트 글리프(`>_`).
- *   그라디언트 화살표(전형적인 "AI가 만든 앱" 아이콘) 대신, 브랜드가
- *   실제로 다루는 대상인 "터미널/로컬호스트"를 직접적으로 가리킨다.
+ * 평평한 잉크색 배경 + 프롬프트 셰브런(`>`) + 체크마크(`✓`).
+ *   `>_`는 PowerShell/터미널 앱 아이콘과 구분이 안 돼서, 밑줄을
+ *   체크마크로 바꿨다 — "프롬프트에 체크리스트를"이라는 브랜드
+ *   스토리를 담은 고유 마크. 체크는 액센트(테라코타)로 강조한다.
  *
  * 실행: node scripts/gen-icons.cjs
  */
@@ -23,13 +24,13 @@ function renderIcon(size) {
   const radius = size * 0.17; // 각진 느낌 유지 (터미널 창 느낌)
   const stroke = Math.max(1.4, size * 0.075);
 
-  // 프롬프트 ">" 셰브런 두 선분 + "_" 밑줄 (정규화 좌표 0~1)
-  const p1 = { x: 0.3, y: 0.32 };
-  const p2 = { x: 0.5, y: 0.5 };
-  const p3 = { x: 0.3, y: 0.68 };
-  const underscoreY = 0.72;
-  const underscoreX0 = 0.54;
-  const underscoreX1 = 0.76;
+  // 프롬프트 ">" 셰브런 두 선분 + 체크마크 두 선분 (정규화 좌표 0~1)
+  const p1 = { x: 0.24, y: 0.31 };
+  const p2 = { x: 0.42, y: 0.49 };
+  const p3 = { x: 0.24, y: 0.67 };
+  const c1 = { x: 0.5, y: 0.58 };
+  const c2 = { x: 0.62, y: 0.7 };
+  const c3 = { x: 0.82, y: 0.4 };
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -48,13 +49,16 @@ function renderIcon(size) {
         distToSegment(px, py, p1.x, p1.y, p2.x, p2.y),
         distToSegment(px, py, p2.x, p2.y, p3.x, p3.y)
       );
-      const dUnderscore = distToSegment(px, py, underscoreX0, underscoreY, underscoreX1, underscoreY);
+      const dCheck = Math.min(
+        distToSegment(px, py, c1.x, c1.y, c2.x, c2.y),
+        distToSegment(px, py, c2.x, c2.y, c3.x, c3.y)
+      );
 
       let col = INK;
       const chevronMask = smooth(dChevron, strokeN);
-      const underscoreMask = smooth(dUnderscore, strokeN);
+      const checkMask = smooth(dCheck, strokeN);
       if (chevronMask > 0) col = mix(col, CREAM, chevronMask);
-      if (underscoreMask > 0) col = mix(col, ACCENT, underscoreMask);
+      if (checkMask > 0) col = mix(col, ACCENT, checkMask);
 
       buf[i] = Math.round(col[0]);
       buf[i + 1] = Math.round(col[1]);
