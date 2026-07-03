@@ -12,6 +12,7 @@ import {
 import { buildPrompt, deriveSpec } from '../js/promptBuilder.js';
 import { buildRepo } from '../js/repoBuilder.js';
 import { makeZipBytes } from '../js/zip.js';
+import { PRESETS, getPreset, encodeAnswers, decodeAnswers, buildPresetFragmentUrl } from '../js/presets.js';
 
 let pass = 0;
 function ok(name, cond) {
@@ -159,5 +160,45 @@ ok('zip 끝에 EOCD(PK\\x05\\x06)', (() => {
   return false;
 })());
 ok('zip 바이트 길이 > 0', zbytes.length > 100);
+
+console.log('\n[11] 프리셋 데이터 무결성 (js/presets.js)');
+const qIds = new Set(QUESTIONS.map((q) => q.id));
+const validValues = {};
+for (const q of QUESTIONS) {
+  if (q.type === 'single') validValues[q.id] = new Set(q.options.map((o) => o.value));
+}
+ok('프리셋이 1개 이상 존재', PRESETS.length > 0);
+const seenSlugs = new Set();
+for (const preset of PRESETS) {
+  ok(`${preset.slug}: slug 중복 없음`, !seenSlugs.has(preset.slug));
+  seenSlugs.add(preset.slug);
+  ok(`${preset.slug}: title 존재`, typeof preset.title === 'string' && preset.title.length > 0);
+  ok(`${preset.slug}: description 존재`, typeof preset.description === 'string' && preset.description.length > 0);
+  ok(`${preset.slug}: idea 답변 존재(텍스트)`, typeof preset.answers.idea === 'string' && preset.answers.idea.length > 0);
+  for (const [qid, value] of Object.entries(preset.answers)) {
+    ok(`${preset.slug}: '${qid}' 는 실제 질문 id`, qIds.has(qid));
+    if (validValues[qid]) {
+      ok(`${preset.slug}: '${qid}'='${value}' 는 유효한 옵션값`, validValues[qid].has(value));
+    }
+  }
+  // 답변만으로 실제 라우팅을 끝까지 따라가도 문제(=deriveSpec/buildPrompt)없이 프롬프트가 나와야 한다.
+  const spec = deriveSpec(preset.answers);
+  ok(`${preset.slug}: deriveSpec 이 stack 을 결정함`, spec.stack === 'web' || spec.stack === 'python');
+  const built = buildPrompt(preset.answers);
+  ok(`${preset.slug}: buildPrompt 결과 프롬프트 문자열 생성`, typeof built.prompt === 'string' && built.prompt.length > 0);
+}
+ok('getPreset 로 슬러그 조회', getPreset('ai-chatbot').slug === 'ai-chatbot');
+ok('getPreset 없는 슬러그는 null', getPreset('no-such-preset') === null);
+
+console.log('\n[12] 프리셋 → 프래그먼트 링크 인코딩 (한글 라운드트립)');
+const sample = getPreset('ai-chatbot');
+const encoded = encodeAnswers(sample.answers);
+ok('base64 문자열 생성', typeof encoded === 'string' && encoded.length > 0);
+const decoded = decodeAnswers(encoded);
+ok('디코딩 결과가 원본과 동일(한글 포함)', JSON.stringify(decoded) === JSON.stringify(sample.answers));
+ok('idea 한글 텍스트가 안 깨짐', decoded.idea === sample.answers.idea);
+const url = buildPresetFragmentUrl(sample, '../app.html');
+ok('프래그먼트 URL 형식', url.startsWith('../app.html#s='));
+ok('프래그먼트 URL 이 base64 인코딩과 일치', url === `../app.html#s=${encoded}`);
 
 console.log(`\n✅ 전체 통과: ${pass}개 검증\n`);
