@@ -162,7 +162,9 @@ python3 -m http.server 8000
 ```
 nocalhostmore/
 ├── index.html             # 웹: 랜딩
-├── app.html               # 웹: 생성기(히스토리·Pro 레포·광고)
+├── app.html               # 웹: 생성기(히스토리·공유링크·Pro 레포·인프라 링크·광고)
+├── diagnose.html          # 웹: 코드 진단 도구(붙여넣기 → 휴리스틱 스캔)
+├── presets/index.html     # 웹: 앱 유형 프리셋 라이브러리(SEO 랜딩 겸용)
 ├── about.html · privacy.html · terms.html   # 웹: 소개·개인정보처리방침·이용약관(AdSense 필수)
 ├── guides/                # 웹: SEO 콘텐츠 허브(광고 지면)
 │   ├── index.html
@@ -172,16 +174,20 @@ nocalhostmore/
 ├── assets/
 │   ├── components.css     # 확장·웹 공유 컴포넌트 스타일
 │   ├── popup.css          # 확장 팝업 셸(420px)
-│   └── site.css           # 웹 셸(반응형·랜딩·가이드·모달)
+│   └── site.css           # 웹 셸(반응형·랜딩·가이드·모달·진단 도구)
 ├── js/
 │   ├── questions.js       # [공유] 질문 + 분기(라우팅) 데이터 모델
 │   ├── promptBuilder.js   # [공유] 답변 → 가드레일 프롬프트 + 스택/영속성 유도
-│   ├── app.js             # [공유] 위저드 컨트롤러(결과 훅 지원)
-│   ├── site.js            # 웹 전용: Pro 레포·히스토리·페이월·광고 훅(app.html)
-│   ├── repoBuilder.js     # 웹 전용: spec → 스타터 레포 파일 생성
+│   ├── app.js             # [공유] 위저드 컨트롤러(결과 훅·공유링크 지원)
+│   ├── share.js           # [공유] 답변 ↔ URL 프래그먼트 인코딩(공유링크·프리셋이 재사용)
+│   ├── site.js            # 웹 전용: Pro 레포·히스토리·페이월·후원/제휴 링크·광고 훅(app.html)
+│   ├── repoBuilder.js     # 웹 전용: spec → 스타터 레포 파일 생성(백링크 포함)
 │   ├── zip.js             # 웹 전용: 무의존성 ZIP 인코더
 │   ├── ads.js             # 웹 전용: AdSense 슬롯(플레이스홀더/실광고)
-│   └── ads-init.js        # 웹 전용: 랜딩·가이드 페이지의 광고 슬롯 부트스트랩
+│   ├── ads-init.js        # 웹 전용: 랜딩·가이드 페이지의 광고 슬롯 부트스트랩
+│   ├── presets.js         # 웹 전용: 프리셋 데이터(share.js 재사용)
+│   ├── presets-init.js    # 웹 전용: ?preset= 쿼리 → 프래그먼트 부트스트랩
+│   └── diagnose.js        # 웹 전용: 코드 진단 정규식 휴리스틱 스캐너
 ├── icons/                 # PNG 아이콘 (16/32/48/128)
 ├── vercel.json            # Vercel 배포 설정(clean URLs)
 ├── robots.txt · sitemap.xml · ads.txt
@@ -197,7 +203,7 @@ nocalhostmore/
 
 ```bash
 npm run icons   # 아이콘 재생성
-npm test        # 질문 그래프·유도·프롬프트·레포·ZIP 검증 (84개 케이스)
+npm test        # 질문 그래프·유도·프롬프트·레포·ZIP·진단·프리셋·공유링크 검증 (206개 케이스)
 ```
 
 `questions.js`·`promptBuilder.js`·`repoBuilder.js`·`zip.js`는 DOM 의존성이 없어 `npm test`로
@@ -212,10 +218,14 @@ npm test        # 질문 그래프·유도·프롬프트·레포·ZIP 검증 (84
 - [x] 웹사이트 전환 + 콘텐츠 허브(SEO) + 프리미엄(스타터 레포 zip)·히스토리·AdSense 지면
 - [x] Vercel 배포, 가이드 10편 확장, 개인정보처리방침·이용약관·소개 페이지(AdSense 심사 요건)
 - [x] Google 공식 AdSense 가이드라인 기반 사전 점검(미완성 인상 방지, 콘텐츠 분량, 내비게이션·문의)
+- [x] 멀티 에이전트 전략 리서치(성장·수익화·UX·신규기능) 기반 개선: 결과 공유 링크, 앱 유형
+      프리셋 라이브러리, 코드 진단 도구(휴리스틱), 위저드 접근성(WCAG AA 대비·ARIA·포커스 관리)
+      정비, 후원/제휴 링크 스캐폴드, zip 백링크
 - [ ] 커스텀 도메인 연결 → Google AdSense 신청
+- [ ] Gumroad 프롬프트팩 시범 판매, 무료/Pro 구조 재검토 (사업 결정 — 별도 논의)
 - [ ] 실제 결제(Stripe·Gumroad) 연결로 Pro 활성화
 - [ ] 생성 프롬프트 영어(EN) 버전 토글 (글로벌 사용자 대상)
-- [ ] 스택 프리셋 저장/불러오기, 계정 동기화
+- [ ] VS Code/Cursor 확장 포팅, 임베드 위젯/API (전략 리서치에서 확인, 우선순위 낮음/보류)
 
 ---
 
