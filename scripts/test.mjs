@@ -45,7 +45,8 @@ ok(
   resolveNext(getQuestion('files'), 'no', { deploy: 'deploy' }) === 'secrets'
 );
 ok('파일있음 → fileHandling', resolveNext(getQuestion('files'), 'yes', { deploy: 'deploy' }) === 'fileHandling');
-ok('secrets가 마지막', resolveNext(getQuestion('secrets'), 'no', {}) === null);
+ok('secrets → aitool', resolveNext(getQuestion('secrets'), 'no', {}) === 'aitool');
+ok('aitool이 마지막', resolveNext(getQuestion('aitool'), 'chatbot', {}) === null);
 ok('배포 경로엔 localSave 질문이 안 나온다', true); // 위 라우팅으로 보장됨
 
 console.log('\n[3] 유도(derive) — 모순 불가능 검증');
@@ -102,5 +103,21 @@ const D = buildPrompt({ deploy: 'local', files: 'yes', fileHandling: 'ephemeral'
 ok('로컬 실행 범위 문구', D.prompt.includes('자기 컴퓨터'));
 ok('일회성 파일 finally 삭제', D.prompt.includes('finally'));
 ok('유료 경고 없음(로컬)', !D.notes.some((n) => n.includes('요금')));
+
+console.log('\n[8] AI 도구 분기 — 프롬프트가 서로 달라야 함');
+const base = { deploy: 'deploy', audience: 'tool', files: 'no', secrets: 'no', idea: '간단한 타이머' };
+const chat = buildPrompt({ ...base, aitool: 'chatbot' });
+const agent = buildPrompt({ ...base, aitool: 'agent' });
+ok('두 프롬프트는 서로 다르다', chat.prompt !== agent.prompt);
+ok('채팅형: 단계별/멈춤 지시', chat.prompt.includes('한 번에 다 쓰지 마라') && chat.prompt.includes('다음'));
+ok('채팅형: 진행 체크리스트 지시', chat.prompt.includes('[진행'));
+ok('채팅형: 자르지 마라', chat.prompt.includes('중간에서 자르지 마라'));
+ok('에이전트형: 파일 직접 생성', agent.prompt.includes('파일을 실제로 생성'));
+ok('에이전트형: 실행/테스트 검증', agent.prompt.includes('실행/테스트'));
+ok('에이전트형엔 "다음 기다려" 게이트 없음', !agent.prompt.includes('내 "다음"을 기다려'));
+ok('채팅형 팁 존재', /다음/.test(chat.tip));
+ok('에이전트형 팁 존재', /에이전트|Cursor/.test(agent.tip));
+ok('요약에 도구 종류', chat.summary.some((s) => s.includes('채팅형')) && agent.summary.some((s) => s.includes('에이전트')));
+ok('기본값(aitool 미지정)은 채팅형', buildPrompt(base).spec.aitool === 'chatbot');
 
 console.log(`\n✅ 전체 통과: ${pass}개 검증\n`);

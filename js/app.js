@@ -180,7 +180,7 @@ function goBack() {
 /* ---------- 결과 화면 ---------- */
 function finish() {
   state.finished = true;
-  const { prompt, summary, notes } = buildPrompt(state.answers);
+  const { prompt, summary, notes, tip } = buildPrompt(state.answers);
   screen.innerHTML = '';
   screen.scrollTop = 0;
 
@@ -230,7 +230,8 @@ function finish() {
     el(
       'div',
       'tip',
-      '💡 팁: 이 프롬프트로 뼈대를 먼저 잡은 뒤, 세부 기능은 "이 구조를 지키면서 ○○ 기능 추가해줘"라고 이어서 요청하세요.'
+      tip ||
+        '💡 팁: 이 프롬프트로 뼈대를 먼저 잡은 뒤, 세부 기능은 "이 구조를 지키면서 ○○ 기능 추가해줘"라고 이어서 요청하세요.'
     )
   );
 

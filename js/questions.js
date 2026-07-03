@@ -24,6 +24,7 @@ export const STEP_LABELS = {
   reach: '누가 · 어떻게',
   data: '데이터 & 파일',
   connect: '외부 연결',
+  deliver: 'AI 도구',
 };
 
 /** 파일 처리 이후 공통 라우팅: 로컬이면 저장 여부를 묻고, 배포면 바로 외부연결로 */
@@ -195,19 +196,48 @@ export const QUESTIONS = [
         value: 'no',
         label: '아니요, 그런 외부 연결은 없어요',
         desc: '내 코드 안에서만 동작해요.',
-        next: null,
+        next: 'aitool',
       },
       {
         value: 'yes',
         label: '네, AI나 외부 서비스를 연결해요',
         desc: '비밀 키가 필요해요. GitHub에 실수로 올려 요금 폭탄 맞는 사고를 막아야 해요.',
         tag: '요금 폭탄 주의',
-        next: null,
+        next: 'aitool',
       },
     ],
     recommend: 'yes',
     recommendReason:
       'AI(챗봇·요약·이미지 생성 등)를 쓰거나 결제·지도·외부 데이터가 조금이라도 있으면 "네"입니다. 비밀 키가 코드에 박히면 공개 저장소에 올리는 순간 털립니다. 애매하면 "네"로 두고 안전장치를 챙기는 게 이득이에요.',
+  },
+
+  // ── 7. 어떤 AI 도구에 넣을 것인가 (출력 프로토콜 분기) ──────────
+  {
+    id: 'aitool',
+    step: 'deliver',
+    type: 'single',
+    title: '완성된 프롬프트를 어떤 AI로 코딩하실 건가요?',
+    hint: '도구 방식에 따라 코드를 받는 법이 달라서, 거기에 딱 맞게 프롬프트를 맞춰드려요.',
+    options: [
+      {
+        value: 'chatbot',
+        label: '채팅형 AI — ChatGPT · Claude · Gemini',
+        desc: '대화창에 붙여넣고 답을 받아 직접 복사해 쓰는 방식이에요. 큰 프로젝트는 나눠서 받아야 잘려요.',
+        next: null,
+      },
+      {
+        value: 'agent',
+        label: '코딩 에이전트 — Cursor · Claude Code · Codex · Cline',
+        desc: '내 프로젝트 폴더의 파일을 직접 만들고 고쳐주는 도구예요. 큰 프로젝트도 한 번에 잘 다뤄요.',
+        tag: '큰 프로젝트 유리',
+        next: null,
+      },
+    ],
+    recommend: 'chatbot',
+    recommendReason:
+      '평소 ChatGPT·Claude·Gemini의 "대화창"에 붙여넣어 쓰신다면 채팅형입니다(대부분의 초보가 여기에 해당). ' +
+      'Cursor나 Claude Code 같은 걸 설치해 코드 편집기 안에서 쓰고 있다면 에이전트형이에요. ' +
+      '참고로 파일이 많은(수천 줄) 프로젝트라면 에이전트형이 중간에 안 잘리고 실행·검증까지 해줘서 훨씬 수월합니다 — 아직 안 써봤다면 Cursor·Claude Code 설치를 고려해볼 만해요.',
   },
 ];
 
