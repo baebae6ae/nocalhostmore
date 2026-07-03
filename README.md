@@ -52,6 +52,7 @@ python3 -m http.server 8000
 #### "정식 서비스"로 승격 (Vercel + 커스텀 도메인, 추천)
 가장 프로처럼 보이는 방법은 **Vercel + 내 도메인**입니다(서버리스 함수로 나중에 결제도 가능).
 1. [vercel.com](https://vercel.com) 로그인 → **Add New → Project** → 이 저장소 Import (빌드 설정 없음, Framework: Other)
+   - 저장소에 `vercel.json`(clean URLs)이 포함돼 있어 별도 빌드 설정이 필요 없습니다. 기본 브랜치가 자동으로 프로덕션이 됩니다.
 2. 배포되면 `xxx.vercel.app` 즉시 생성. **Settings → Domains**에서 구입한 도메인 연결(HTTPS 자동)
 3. `robots.txt`·`sitemap.xml`의 도메인, `js/ads.js`의 `ADSENSE_CLIENT`를 실제 값으로 교체
 
