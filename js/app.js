@@ -97,7 +97,7 @@ function renderSingle(q) {
   // "잘 모르겠어요"
   const unsure = document.createElement('button');
   unsure.className = 'unsure-btn';
-  unsure.textContent = '🤔 잘 모르겠어요 — 추천해 주세요';
+  unsure.textContent = '잘 모르겠어요 — 추천 보기';
   unsure.addEventListener('click', () => showRecommendation(q, wrap, unsure));
   screen.appendChild(unsure);
 }
@@ -143,7 +143,7 @@ function showRecommendation(q, wrap, unsureBtn) {
   const recoOpt = q.options.find((o) => o.value === q.recommend) || q.options[0];
 
   const panel = el('div', 'reco');
-  panel.appendChild(el('div', 'reco-title', '💡 이 경우엔 이렇게 추천해요'));
+  panel.appendChild(el('div', 'reco-title', '이 경우엔 이렇게 추천합니다'));
   panel.appendChild(
     el(
       'p',
@@ -185,7 +185,7 @@ function finish() {
   screen.scrollTop = 0;
 
   const head = el('div', 'result-head');
-  head.appendChild(el('h2', null, '🚀 마스터 프롬프트 완성!'));
+  head.appendChild(el('h2', null, '프롬프트 완성'));
   screen.appendChild(head);
   screen.appendChild(
     el(
@@ -216,7 +216,7 @@ function finish() {
   const actions = el('div', 'result-actions');
   const copyBtn = document.createElement('button');
   copyBtn.className = 'btn-primary';
-  copyBtn.textContent = '📋 프롬프트 복사';
+  copyBtn.textContent = '프롬프트 복사';
   copyBtn.addEventListener('click', () => copyPrompt(prompt, copyBtn));
   const restartBtn = document.createElement('button');
   restartBtn.className = 'btn-secondary';
@@ -241,7 +241,7 @@ function finish() {
       'div',
       'tip',
       tip ||
-        '💡 팁: 이 프롬프트로 뼈대를 먼저 잡은 뒤, 세부 기능은 "이 구조를 지키면서 ○○ 기능 추가해줘"라고 이어서 요청하세요.'
+        '팁 — 이 프롬프트로 뼈대를 먼저 잡은 뒤, 세부 기능은 "이 구조를 지키면서 ○○ 기능 추가해줘"라고 이어서 요청하세요.'
     )
   );
 
@@ -261,7 +261,7 @@ async function copyPrompt(text, btn) {
     ta.remove();
   }
   const orig = btn.textContent;
-  btn.textContent = '✅ 복사됐어요!';
+  btn.textContent = '복사됨';
   setTimeout(() => (btn.textContent = orig), 1600);
 }
 

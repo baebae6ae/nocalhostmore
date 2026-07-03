@@ -50,7 +50,7 @@ function renderHistory() {
     item.title = '클릭하면 프롬프트가 복사됩니다';
     item.addEventListener('click', async () => {
       await copy(e.prompt);
-      toast('📋 복사됐어요');
+      toast('복사됨');
     });
     box.appendChild(item);
   });
@@ -78,7 +78,7 @@ function openPaywall(onUnlock) {
   overlay.innerHTML = `
     <div class="modal" role="dialog" aria-modal="true">
       <button class="modal-close" aria-label="닫기">✕</button>
-      <h3>⬇️ 스타터 레포 다운로드는 <span class="pro-tag">Pro</span></h3>
+      <h3>스타터 레포 다운로드 — <span class="pro-tag">Pro</span></h3>
       <p class="modal-sub">프롬프트만이 아니라, 답변에 맞춘 <b>실행 가능한 프로젝트 뼈대</b>(폴더 구조·.gitignore·.env.example·가드레일 반영 코드)를 zip으로 바로 받으세요.</p>
       <div class="plan-grid">
         <div class="plan">
@@ -90,7 +90,7 @@ function openPaywall(onUnlock) {
           <ul><li>✓ 무료의 모든 기능</li><li>✓ 스타터 레포 zip</li><li>✓ (예정) 영어 출력·팀 프리셋</li></ul>
         </div>
       </div>
-      <button class="btn-primary modal-cta">🎉 베타 기간 무료로 활성화</button>
+      <button class="btn-primary modal-cta">베타 기간 무료로 활성화</button>
       <p class="modal-foot">베타 기간에는 무료입니다. 이후 유료 전환 시 결제(Stripe·Gumroad 등)를 연결하세요.</p>
     </div>`;
   document.body.appendChild(overlay);
@@ -118,11 +118,11 @@ window.NCH_resultHook = ({ spec, prompt, answers, summary, actions }) => {
   // 2) Pro: 스타터 레포 다운로드 버튼
   const repoBtn = document.createElement('button');
   repoBtn.className = 'btn-secondary repo-btn';
-  repoBtn.innerHTML = '⬇️ 스타터 레포 <span class="pro-tag">Pro</span>';
+  repoBtn.innerHTML = '스타터 레포 <span class="pro-tag">Pro</span>';
   repoBtn.addEventListener('click', () => {
     if (isPro()) {
       downloadRepo(spec, prompt, idea);
-      toast('⬇️ 레포를 내려받았어요');
+      toast('레포 다운로드됨');
     } else {
       openPaywall(() => downloadRepo(spec, prompt, idea));
     }

@@ -6,12 +6,12 @@
     <title>Nocalhostmore — 바이브 코더를 위한 프로덕션 프롬프트 제너레이터</title>
     <meta
       name="description"
-      content="코딩 전에 답하는 '이륙 전 체크리스트'로, AI가 처음부터 프로덕션 레벨 구조로 코드를 짜게 만드는 마스터 프롬프트를 생성합니다. 무료."
+      content="코딩 전에 답하는 체크리스트로, AI가 처음부터 프로덕션 레벨 구조로 코드를 짜게 만드는 마스터 프롬프트를 생성합니다. 무료."
     />
     <meta property="og:title" content="Nocalhostmore — 더 이상 로컬호스트는 그만" />
     <meta
       property="og:description"
-      content="쉬운 질문 몇 개로, 상태관리·보안·배포까지 지키는 프로덕션 프롬프트를 자동 생성."
+      content="쉬운 질문 몇 개로 상태 관리·보안·배포 규칙을 담은 프로덕션 프롬프트를 만듭니다."
     />
     <meta property="og:type" content="website" />
     <link rel="icon" href="icons/icon48.png" />
@@ -19,136 +19,129 @@
     <link rel="stylesheet" href="assets/site.css" />
   </head>
   <body>
-    <!-- 네비 -->
     <nav class="nav">
       <div class="wrap nav-inner">
         <a class="nav-brand" href="index.html">
           <img src="icons/icon48.png" alt="" />
-          <span>Nocalhostmore</span>
+          <span>nocalhostmore</span>
         </a>
         <div class="nav-links">
           <a href="guides/index.html">가이드</a>
           <a href="#how" class="nav-secondary">사용법</a>
-          <a class="nav-cta" href="app.html">지금 만들기</a>
+          <a class="nav-cta" href="app.html">시작하기</a>
         </div>
       </div>
     </nav>
 
-    <!-- 히어로 -->
     <header class="hero">
       <div class="wrap">
-        <span class="eyebrow">🚀 더 이상 로컬호스트는 그만</span>
+        <span class="eyebrow">nocalhostmore</span>
         <h1>
           기능은 AI가 짜고,<br />
-          <span class="grad">뼈대는 시스템이 잡는다.</span>
+          <span class="accent">뼈대는 미리 정해둔다.</span>
         </h1>
         <p class="lead">
-          "상태 관리", "멀티 테넌시" 같은 어려운 말 몰라도 됩니다. 쉬운 질문 몇 개에 답하면,
-          AI가 <b>처음부터 프로덕션 레벨 구조</b>로 코드를 짜게 만드는 마스터 프롬프트를 만들어 드려요.
+          "상태 관리", "멀티 테넌시" 같은 말을 몰라도 됩니다. 몇 가지 질문에 답하면 그 답을 상태 관리·보안·배포
+          규칙으로 바꿔, AI가 처음부터 프로덕션을 염두에 두고 코드를 짜게 만드는 프롬프트를 만들어 드립니다.
         </p>
         <div class="hero-actions">
-          <a class="btn-hero" href="app.html">무료로 프롬프트 만들기 →</a>
-          <a class="btn-hero ghost" href="guides/index.html">가이드 먼저 보기</a>
+          <a class="btn-hero" href="app.html">프롬프트 만들기</a>
+          <a class="btn-hero ghost" href="guides/index.html">가이드 보기</a>
         </div>
       </div>
     </header>
 
     <main class="wrap">
-      <!-- 문제 제기 -->
       <section class="section">
-        <h2>왜 만든 코드를 자꾸 갈아엎게 될까요?</h2>
+        <h2>대부분 문제는 설계에서 시작된다</h2>
         <p class="sub">
-          기능 구현에만 매달리다 보면, 여러 명이 접속하는 순간 데이터가 섞이고, API 키가 유출되고,
-          배포하면 파일이 사라집니다. 대부분 <b>처음 설계</b>에서 갈립니다.
+          기능 구현에만 매달리다 보면 여러 명이 접속했을 때 데이터가 섞이고, API 키가 새어나가고, 배포하면 파일이
+          사라지는 일이 생깁니다. 나중에 코드를 다시 짜는 대신, 처음에 몇 가지만 정해두면 됩니다.
         </p>
         <div class="features">
           <div class="feature">
-            <div class="ico">🧩</div>
-            <h3>상태·동시접속</h3>
-            <p>여러 명이 써도 데이터가 섞이지 않게 세션 격리·공유 상태 규칙을 자동 주입합니다.</p>
+            <div class="ico">state</div>
+            <h3>상태·동시 접속</h3>
+            <p>여러 명이 써도 데이터가 섞이지 않도록 세션 격리·공유 상태 규칙을 넣습니다.</p>
           </div>
           <div class="feature">
-            <div class="ico">🔐</div>
-            <h3>비밀 키 보안</h3>
-            <p>API 키 하드코딩을 막고 <code>.env</code>·<code>st.secrets</code> 사용을 강제해 요금 폭탄을 예방합니다.</p>
+            <div class="ico">secrets</div>
+            <h3>비밀 키 관리</h3>
+            <p>API 키 하드코딩을 막고 <code>.env</code>·<code>st.secrets</code> 사용을 강제합니다.</p>
           </div>
           <div class="feature">
-            <div class="ico">💾</div>
+            <div class="ico">storage</div>
             <h3>데이터·파일</h3>
-            <p>일회성/영구 저장, UUID 파일명, 강제 삭제, DB 뼈대까지 상황에 맞게 규칙화합니다.</p>
+            <p>일회성/영구 저장, 파일명 처리, DB 뼈대까지 상황에 맞게 규칙화합니다.</p>
           </div>
           <div class="feature">
-            <div class="ico">🧭</div>
+            <div class="ico">stack</div>
             <h3>스택 자동 결정</h3>
-            <p>초보는 언어를 고를 필요 없어요. 의도만 답하면 프론트엔드/파이썬을 알아서 정합니다.</p>
+            <p>언어를 고를 필요 없습니다. 의도만 답하면 프론트엔드/파이썬 중 알맞은 쪽을 정합니다.</p>
           </div>
         </div>
       </section>
 
-      <!-- 광고 슬롯 -->
       <div class="ad-slot" data-ad-slot=""></div>
 
-      <!-- 사용법 -->
       <section class="section" id="how">
-        <h2>3단계면 끝</h2>
-        <p class="sub">복잡한 설정 없이, 답하고 복사하면 됩니다.</p>
+        <h2>3단계</h2>
+        <p class="sub">설정 없이, 답하고 복사하면 됩니다.</p>
         <div class="steps">
           <div class="step">
-            <h3>1. 쉬운 질문에 답하기</h3>
-            <p>"누가 쓰나요?", "파일을 올리나요?" 같은 일상 언어 질문에 클릭으로 답합니다. 모르면 추천을 받으세요.</p>
+            <h3>질문에 답한다</h3>
+            <p>"누가 쓰나요", "파일을 올리나요" 같은 질문에 클릭으로 답합니다. 모르면 추천을 받을 수 있습니다.</p>
           </div>
           <div class="step">
-            <h3>2. 마스터 프롬프트 생성</h3>
-            <p>답변이 상태관리·보안·아키텍처 규칙으로 번역돼, 잘림 없이 전달되는 프롬프트가 나옵니다.</p>
+            <h3>프롬프트를 만든다</h3>
+            <p>답변이 상태·보안·아키텍처 규칙으로 바뀌어, 잘리지 않고 전달되는 프롬프트가 나옵니다.</p>
           </div>
           <div class="step">
-            <h3>3. AI에게 붙여넣기</h3>
-            <p>ChatGPT·Claude·Cursor·Claude Code 등에 "가장 먼저" 붙여넣으면, 그 규칙 위에서 코딩이 시작됩니다.</p>
+            <h3>AI에게 붙여넣는다</h3>
+            <p>ChatGPT·Claude·Cursor 등에 가장 먼저 붙여넣으면, 그 규칙 위에서 코딩이 시작됩니다.</p>
           </div>
         </div>
       </section>
 
-      <!-- 가격 -->
       <section class="section">
         <h2>가격</h2>
-        <p class="sub">프롬프트 생성은 언제나 무료. 실행 가능한 프로젝트 뼈대까지 필요하면 Pro.</p>
+        <p class="sub">프롬프트 생성은 항상 무료입니다. 실행 가능한 프로젝트 뼈대가 필요하면 Pro를 씁니다.</p>
         <div class="pricing">
           <div class="price-card">
             <div class="pname">무료</div>
-            <div class="pprice">₩0</div>
+            <div class="pprice">0원</div>
             <ul>
-              <li>✓ 마스터 프롬프트 생성</li>
-              <li>✓ 생성 히스토리</li>
-              <li>✓ 프로덕션 가이드 문서</li>
+              <li>마스터 프롬프트 생성</li>
+              <li>생성 히스토리</li>
+              <li>가이드 문서</li>
             </ul>
           </div>
           <div class="price-card hl">
             <div class="pname">Pro <span class="pro-tag">베타 무료</span></div>
-            <div class="pprice">₩0 <small>베타 기간</small></div>
+            <div class="pprice">0원 <small>베타 기간</small></div>
             <ul>
-              <li>✓ 무료의 모든 기능</li>
-              <li>✓ <b>스타터 레포 zip 다운로드</b></li>
-              <li>✓ (예정) 영어 출력 · 팀 프리셋</li>
+              <li>무료의 모든 기능</li>
+              <li>스타터 레포 zip 다운로드</li>
+              <li>(예정) 영어 출력 · 팀 프리셋</li>
             </ul>
           </div>
         </div>
       </section>
 
       <div class="cta-inline">
-        <h3>지금 첫 프롬프트를 만들어보세요</h3>
-        <p>회원가입 없이 바로 시작할 수 있어요.</p>
-        <a class="btn-hero" href="app.html">무료로 시작하기 →</a>
+        <h3>첫 프롬프트 만들기</h3>
+        <p>회원가입 없이 바로 시작할 수 있습니다.</p>
+        <a class="btn-hero" href="app.html">시작하기</a>
       </div>
     </main>
 
     <footer class="site-footer">
       <div class="wrap">
-        Nocalhostmore · 바이브 코더를 위한 프로덕션 프롬프트 제너레이터<br />
+        nocalhostmore · 바이브 코더를 위한 프로덕션 프롬프트 제너레이터<br />
         <a href="guides/index.html">가이드</a> · <a href="app.html">프롬프트 만들기</a> · <a href="about.html">소개</a> ·
         <a href="privacy.html">개인정보처리방침</a> · <a href="terms.html">이용약관</a>
       </div>
     </footer>
     <script type="module" src="js/ads-init.js"></script>
-
   </body>
 </html>

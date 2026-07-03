@@ -17,7 +17,7 @@
       <div class="wrap nav-inner">
         <a class="nav-brand" href="../index.html">
           <img src="../icons/icon48.png" alt="" />
-          <span>Nocalhostmore</span>
+          <span>nocalhostmore</span>
         </a>
         <div class="nav-links">
           <a href="index.html">가이드</a>
@@ -38,7 +38,7 @@
       </p>
 
       <h2>왜 하드코딩이 위험한가</h2>
-      <pre><code># ❌ 절대 하지 마세요
+      <pre><code># 절대 하지 마세요
 client = OpenAI(api_key="sk-abcd1234...")   # 코드에 키가 그대로</code></pre>
       <p>
         문제는 두 가지입니다. 첫째, GitHub에 올리면 <b>전 세계에 공개</b>됩니다. 둘째, 한 번 커밋하면 나중에 지워도 <b>Git 히스토리에
@@ -94,7 +94,7 @@ OPENAI_API_KEY=</code></pre>
       </ul>
 
       <blockquote>
-        요약: <b>키는 코드 밖으로</b>(.env / st.secrets), <b>.gitignore로 잠그고</b>, 유출되면 즉시 폐기·재발급. 여기에 호출 상한까지.
+        <b>키는 코드 밖으로</b>(.env / st.secrets), <b>.gitignore로 잠그고</b>, 유출되면 즉시 폐기·재발급. 여기에 호출 상한까지 더하면 됩니다.
       </blockquote>
 
       <div class="cta-inline">
