@@ -7,6 +7,7 @@ import {
   getQuestion,
   resolveNext,
   START_ID,
+  STEP_LABELS,
 } from './questions.js';
 import { buildPrompt } from './promptBuilder.js';
 
@@ -41,14 +42,7 @@ function updateProgress() {
 }
 
 function labelForStep(key) {
-  const map = {
-    core: '서비스의 심장',
-    scale: '접속 규모',
-    data: '데이터 & 파일',
-    security: '보안',
-    arch: '아키텍처',
-  };
-  return map[key] || '';
+  return STEP_LABELS[key] || '';
 }
 
 /* ---------- 렌더링 ---------- */
@@ -165,7 +159,7 @@ function showRecommendation(q, wrap, unsureBtn) {
 
 /* ---------- 진행 ---------- */
 function goNext(q, value) {
-  const nextId = resolveNext(q, value);
+  const nextId = resolveNext(q, value, state.answers);
   state.history.push(q.id);
   if (nextId) {
     state.currentId = nextId;
@@ -186,7 +180,7 @@ function goBack() {
 /* ---------- 결과 화면 ---------- */
 function finish() {
   state.finished = true;
-  const { prompt, summary } = buildPrompt(state.answers);
+  const { prompt, summary, notes } = buildPrompt(state.answers);
   screen.innerHTML = '';
   screen.scrollTop = 0;
 
@@ -205,6 +199,13 @@ function finish() {
   const chips = el('div', 'summary-chips');
   summary.forEach((sText) => chips.appendChild(el('span', 'chip', sText)));
   screen.appendChild(chips);
+
+  // 비용/무료 안내
+  (notes || []).forEach((n) => {
+    const note = el('div', 'note');
+    note.innerHTML = mdBold(n);
+    screen.appendChild(note);
+  });
 
   // 프롬프트 박스
   const box = el('div', 'prompt-box');
@@ -267,6 +268,15 @@ function el(tag, className, text) {
   if (className) node.className = className;
   if (text != null) node.textContent = text;
   return node;
+}
+
+// **굵게** → <strong> (앱 내부 고정 문자열에만 사용)
+function mdBold(s) {
+  const esc = s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return esc.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 }
 
 backBtn.addEventListener('click', goBack);

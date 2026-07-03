@@ -146,6 +146,7 @@ body {
   position: relative;
   text-align: left;
   background: var(--card);
+  color: var(--text); /* 버튼 기본색(검정) 상속 방지 */
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 13px 15px;
@@ -321,6 +322,20 @@ body {
   color: var(--text-dim);
   padding: 4px 9px;
   border-radius: 99px;
+}
+
+.note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+  background: rgba(255, 176, 32, 0.09);
+  border: 1px solid rgba(255, 176, 32, 0.28);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.note strong {
+  color: var(--warn);
 }
 
 .prompt-box {
