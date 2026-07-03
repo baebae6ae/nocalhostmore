@@ -12,6 +12,7 @@ import {
 import { buildPrompt, deriveSpec } from '../js/promptBuilder.js';
 import { buildRepo } from '../js/repoBuilder.js';
 import { makeZipBytes } from '../js/zip.js';
+import { encodeAnswers, decodeAnswers } from '../js/share.js';
 
 let pass = 0;
 function ok(name, cond) {
@@ -159,5 +160,38 @@ ok('zip 끝에 EOCD(PK\\x05\\x06)', (() => {
   return false;
 })());
 ok('zip 바이트 길이 > 0', zbytes.length > 100);
+
+console.log('\n[11] 공유 링크 인코딩/디코딩 (share.js)');
+const shareAnswers = {
+  idea: '엑셀 파일을 올리면 AI가 요약해서 표로 그려주는 웹사이트',
+  deploy: 'deploy',
+  audience: 'private',
+  files: 'yes',
+  fileHandling: 'permanent',
+  secrets: 'yes',
+  aitool: 'agent',
+};
+const encoded = encodeAnswers(shareAnswers);
+ok('인코딩 결과는 "s="로 시작', encoded.startsWith('s='));
+ok('인코딩 결과에 원본 한글이 그대로 노출되지 않음(직렬화됨)', !encoded.includes('엑셀'));
+const decoded = decodeAnswers('#' + encoded);
+ok('디코딩 결과가 원본과 동일(한글 왕복 포함)', JSON.stringify(decoded) === JSON.stringify(shareAnswers));
+ok('idea 필드 한글이 정확히 복원됨', decoded.idea === shareAnswers.idea);
+// '#' 없이 조각만 넘겨도 동작
+const decoded2 = decodeAnswers(encoded);
+ok('# 없이도 디코딩 가능', JSON.stringify(decoded2) === JSON.stringify(shareAnswers));
+// 빈 답변도 왕복되어야 함
+ok('빈 객체도 왕복', JSON.stringify(decodeAnswers('#' + encodeAnswers({}))) === '{}');
+// 특수문자/이모지 포함 자유서술형 텍스트도 왕복
+const emojiAnswers = { idea: '팀 게시판 🎉 — "따옴표"와 줄바꿈\n포함' };
+ok(
+  '이모지·특수문자·줄바꿈 포함 텍스트 왕복',
+  decodeAnswers('#' + encodeAnswers(emojiAnswers)).idea === emojiAnswers.idea
+);
+// 잘못된/손상된 값은 null
+ok('빈 문자열은 null', decodeAnswers('') === null);
+ok('해시 없음은 null', decodeAnswers('#foo=bar') === null);
+ok('깨진 base64는 null(예외 없이)', decodeAnswers('#s=!!!not-valid-base64!!!') === null);
+ok('JSON이 아닌 값은 null', decodeAnswers('#s=' + Buffer.from('not json').toString('base64')) === null);
 
 console.log(`\n✅ 전체 통과: ${pass}개 검증\n`);
