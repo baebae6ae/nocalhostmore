@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>가이드 · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="바이브 코딩으로 만든 앱을 프로덕션에 올릴 때 반드시 알아야 할 것들 — 상태 관리, 비밀 키, 배포. 초보를 위한 쉬운 설명."
+    />
+    <link rel="icon" href="../icons/icon48.png" />
+    <link rel="stylesheet" href="../assets/components.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="../index.html">
+          <img src="../icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="../index.html">홈</a>
+          <a class="nav-cta" href="../app.html">지금 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="wrap section">
+      <h2>프로덕션 가이드</h2>
+      <p class="sub">
+        "로컬에선 됐는데 배포하니 터진다"의 진짜 이유들. 어려운 CS 용어 없이, 초보의 언어로 풀어드립니다.
+      </p>
+
+      <div class="ad-slot" data-ad-slot=""></div>
+
+      <div class="guide-grid">
+        <a class="guide-card" href="why-localhost-breaks.html">
+          <div class="kicker">기초 · 배포</div>
+          <h3>로컬에선 되던 앱이 배포하면 터지는 5가지 이유</h3>
+          <p>전역 변수, 사라지는 파일, 새어나가는 키… 바이브 코딩이 프로덕션에서 무너지는 전형적 패턴.</p>
+        </a>
+        <a class="guide-card" href="multi-user-state.html">
+          <div class="kicker">상태 관리</div>
+          <h3>여러 명이 쓰면 왜 데이터가 섞일까? (상태 격리)</h3>
+          <p>전역 변수와 세션의 차이를 냉장고 비유로. Streamlit <code>session_state</code>가 필요한 이유.</p>
+        </a>
+        <a class="guide-card" href="api-keys-env.html">
+          <div class="kicker">보안</div>
+          <h3>API 키를 GitHub에 올려 요금 폭탄 맞지 않는 법</h3>
+          <p>하드코딩이 위험한 이유와 <code>.env</code>·<code>st.secrets</code>·<code>.gitignore</code> 실전 세팅.</p>
+        </a>
+      </div>
+
+      <div class="cta-inline">
+        <h3>읽었으면, 바로 적용해보세요</h3>
+        <p>이 가이드의 규칙들이 자동으로 들어간 프롬프트를 만들어 드려요.</p>
+        <a class="btn-hero" href="../app.html">무료로 프롬프트 만들기 →</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">Nocalhostmore · <a href="../index.html">홈</a> · <a href="../app.html">프롬프트 만들기</a></div>
+    </footer>
+  </body>
+</html>

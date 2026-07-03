@@ -10,6 +10,8 @@ import {
   START_ID,
 } from '../js/questions.js';
 import { buildPrompt, deriveSpec } from '../js/promptBuilder.js';
+import { buildRepo } from '../js/repoBuilder.js';
+import { makeZipBytes } from '../js/zip.js';
 
 let pass = 0;
 function ok(name, cond) {
@@ -119,5 +121,43 @@ ok('채팅형 팁 존재', /다음/.test(chat.tip));
 ok('에이전트형 팁 존재', /에이전트|Cursor/.test(agent.tip));
 ok('요약에 도구 종류', chat.summary.some((s) => s.includes('채팅형')) && agent.summary.some((s) => s.includes('에이전트')));
 ok('기본값(aitool 미지정)은 채팅형', buildPrompt(base).spec.aitool === 'chatbot');
+
+console.log('\n[9] 스타터 레포 생성 (Pro)');
+const webSpec = deriveSpec({ deploy: 'deploy', audience: 'tool', files: 'no', secrets: 'no', idea: '타이머 웹' });
+const webRepo = buildRepo(webSpec, buildPrompt({ deploy: 'deploy', audience: 'tool', files: 'no', secrets: 'no', idea: '타이머 웹', aitool: 'chatbot' }).prompt, '타이머 웹');
+const webPaths = webRepo.files.map((f) => f.path);
+ok('web 레포: index.html', webPaths.includes('index.html'));
+ok('web 레포: script.js', webPaths.includes('script.js'));
+ok('web 레포: .gitignore', webPaths.includes('.gitignore'));
+ok('web 레포: PROMPT.md 동봉', webPaths.includes('PROMPT.md'));
+
+const pySpec = deriveSpec({ deploy: 'deploy', audience: 'private', files: 'yes', fileHandling: 'permanent', secrets: 'yes', idea: 'AI 사진 정리 앱' });
+const pyRepo = buildRepo(pySpec, 'PROMPT', 'AI 사진 정리 앱');
+const pyPaths = pyRepo.files.map((f) => f.path);
+ok('py 레포: app.py', pyPaths.includes('app.py'));
+ok('py 레포: requirements.txt', pyPaths.includes('requirements.txt'));
+ok('py 레포: config.py(secrets)', pyPaths.includes('config.py'));
+ok('py 레포: db.py(persist)', pyPaths.includes('db.py'));
+ok('py 레포: auth.py(로그인)', pyPaths.includes('auth.py'));
+ok('py 레포: .env.example', pyPaths.includes('.env.example'));
+const gitignore = pyRepo.files.find((f) => f.path === '.gitignore').content;
+ok('py .gitignore 에 .env 포함', gitignore.includes('.env'));
+const reqs = pyRepo.files.find((f) => f.path === 'requirements.txt').content;
+ok('requirements 에 streamlit', reqs.includes('streamlit'));
+ok('requirements 에 passlib(로그인)', reqs.includes('passlib'));
+
+console.log('\n[10] ZIP 인코더');
+const zbytes = makeZipBytes([
+  { path: 'a/index.html', content: '<h1>hi</h1>' },
+  { path: 'a/README.md', content: '# hello' },
+]);
+ok('zip 은 PK\\x03\\x04 로 시작', zbytes[0] === 0x50 && zbytes[1] === 0x4b && zbytes[2] === 0x03 && zbytes[3] === 0x04);
+ok('zip 끝에 EOCD(PK\\x05\\x06)', (() => {
+  for (let i = zbytes.length - 22; i >= 0; i--) {
+    if (zbytes[i] === 0x50 && zbytes[i + 1] === 0x4b && zbytes[i + 2] === 0x05 && zbytes[i + 3] === 0x06) return true;
+  }
+  return false;
+})());
+ok('zip 바이트 길이 > 0', zbytes.length > 100);
 
 console.log(`\n✅ 전체 통과: ${pass}개 검증\n`);

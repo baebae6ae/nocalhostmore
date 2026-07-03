@@ -180,7 +180,7 @@ function goBack() {
 /* ---------- 결과 화면 ---------- */
 function finish() {
   state.finished = true;
-  const { prompt, summary, notes, tip } = buildPrompt(state.answers);
+  const { prompt, summary, notes, tip, spec } = buildPrompt(state.answers);
   screen.innerHTML = '';
   screen.scrollTop = 0;
 
@@ -225,6 +225,16 @@ function finish() {
   actions.appendChild(copyBtn);
   actions.appendChild(restartBtn);
   screen.appendChild(actions);
+
+  // 웹사이트(app.html)에서만 정의되는 확장 훅 — Pro 기능(레포 zip·히스토리) 등.
+  // 확장 팝업에는 훅이 없으므로 아무 일도 일어나지 않는다.
+  if (typeof window !== 'undefined' && typeof window.NCH_resultHook === 'function') {
+    try {
+      window.NCH_resultHook({ spec, prompt, answers: { ...state.answers }, summary, screen, actions });
+    } catch (e) {
+      console.error('resultHook error', e);
+    }
+  }
 
   screen.appendChild(
     el(

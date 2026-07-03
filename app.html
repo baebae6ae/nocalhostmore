@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>프롬프트 만들기 · Nocalhostmore</title>
+    <meta name="description" content="쉬운 질문에 답하고 프로덕션 레벨 마스터 프롬프트를 생성하세요. 무료." />
+    <link rel="icon" href="icons/icon48.png" />
+    <link rel="stylesheet" href="assets/components.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="index.html">
+          <img src="icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="guides/index.html">가이드</a>
+          <a href="index.html">홈</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <div class="gen-layout">
+        <!-- 생성기 (app.js 가 이 구조를 조작) -->
+        <div class="gen-card">
+          <div id="app">
+            <header class="app-header">
+              <div class="brand">
+                <img src="icons/icon48.png" alt="" class="brand-logo" />
+                <div class="brand-text">
+                  <h1>이륙 전 체크리스트</h1>
+                  <p>쉬운 질문에 답하면 프로덕션 프롬프트가 나와요</p>
+                </div>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </header>
+            <main id="screen" class="screen"></main>
+            <footer class="app-footer">
+              <button id="backBtn" class="btn-ghost" hidden>← 이전</button>
+              <span id="stepLabel" class="step-label"></span>
+            </footer>
+          </div>
+        </div>
+
+        <!-- 사이드: 히스토리 -->
+        <aside class="aside">
+          <div>
+            <h4>최근 생성</h4>
+            <div id="history"></div>
+          </div>
+          <div class="ad-slot" data-ad-slot=""></div>
+        </aside>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        Nocalhostmore · <a href="guides/index.html">가이드</a> · <a href="index.html">홈</a>
+      </div>
+    </footer>
+
+    <!-- site.js 가 먼저 로드되어 결과 훅(Pro 레포·히스토리)을 정의한다 -->
+    <script type="module" src="js/site.js"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

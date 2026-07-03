@@ -1,5 +1,7 @@
 /* ============================================================
-   Nocalhostmore — popup styles
+   Nocalhostmore — 공유 컴포넌트 스타일
+   확장(popup)과 웹사이트(app.html)가 함께 사용한다.
+   ※ 화면 크기/셸 레이아웃은 각각 popup.css / site.css 가 담당.
    ============================================================ */
 :root {
   --bg: #0f1117;
@@ -26,9 +28,7 @@
   padding: 0;
 }
 
-html,
 body {
-  width: 420px;
   background: var(--bg);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
@@ -41,8 +41,6 @@ body {
 #app {
   display: flex;
   flex-direction: column;
-  min-height: 560px;
-  max-height: 600px;
 }
 
 /* ---------- 헤더 ---------- */
@@ -239,7 +237,7 @@ body {
   margin-bottom: 12px;
 }
 
-/* 다음 버튼 */
+/* 기본 버튼 */
 .btn-primary {
   width: 100%;
   margin-top: 16px;
@@ -364,10 +362,12 @@ body {
   display: flex;
   gap: 8px;
   margin-top: 14px;
+  flex-wrap: wrap;
 }
 .result-actions .btn-primary {
   margin-top: 0;
   flex: 2;
+  min-width: 140px;
 }
 .btn-secondary {
   flex: 1;
@@ -379,6 +379,7 @@ body {
   font: inherit;
   font-weight: 650;
   cursor: pointer;
+  min-width: 80px;
 }
 .btn-secondary:hover {
   background: var(--card-hover);

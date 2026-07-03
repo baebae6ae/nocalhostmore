@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API 키를 GitHub에 올려 요금 폭탄 맞지 않는 법 (.env / st.secrets) · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="API 키 하드코딩이 위험한 이유와, .env·python-dotenv·st.secrets·.gitignore로 비밀 값을 안전하게 관리하는 실전 방법."
+    />
+    <link rel="icon" href="../icons/icon48.png" />
+    <link rel="stylesheet" href="../assets/components.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="../index.html">
+          <img src="../icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">가이드</a>
+          <a class="nav-cta" href="../app.html">지금 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <article class="article">
+      <div class="kicker">보안</div>
+      <h1>API 키를 GitHub에 올려 요금 폭탄 맞지 않는 법</h1>
+      <p class="meta">약 6분 · 비밀 값 관리를 처음 배우는 사람을 위한 글</p>
+
+      <p>
+        AI 앱을 만들다 보면 OpenAI 키 같은 <b>비밀 값</b>이 필요합니다. 그런데 이걸 코드에 그대로 적어 GitHub에 올리는 순간,
+        공개 저장소를 <b>24시간 스캔하는 봇</b>들이 수 분 안에 키를 찾아냅니다. 그리고 남이 당신 계정으로 API를 마구 호출해,
+        다음 날 수십만 원 요금이 청구되는 "요금 폭탄" 사고로 이어집니다. 실제로 아주 흔한 일입니다.
+      </p>
+
+      <h2>왜 하드코딩이 위험한가</h2>
+      <pre><code># ❌ 절대 하지 마세요
+client = OpenAI(api_key="sk-abcd1234...")   # 코드에 키가 그대로</code></pre>
+      <p>
+        문제는 두 가지입니다. 첫째, GitHub에 올리면 <b>전 세계에 공개</b>됩니다. 둘째, 한 번 커밋하면 나중에 지워도 <b>Git 히스토리에
+        영원히 남습니다.</b> "커밋했다가 다음 커밋에서 삭제했으니 괜찮겠지"는 통하지 않습니다. 이미 유출된 키는 반드시 폐기하고 새로
+        발급해야 합니다.
+      </p>
+
+      <h2>해결의 핵심: 코드와 비밀을 분리한다</h2>
+      <p>
+        비밀 값은 코드에 두지 말고, <b>바깥(환경변수)</b>에서 읽어오게 만듭니다. 배포하는 곳에 따라 방법이 갈립니다.
+      </p>
+
+      <h3>일반 클라우드 (Vercel · Render · AWS 등) → .env</h3>
+      <p>프로젝트 폴더에 <code>.env</code> 파일을 만들고 키를 넣습니다.</p>
+      <pre><code># .env  (이 파일은 절대 커밋하지 않는다!)
+OPENAI_API_KEY=sk-여기에_진짜_키</code></pre>
+      <p>코드에서는 <code>python-dotenv</code>로 불러옵니다.</p>
+      <pre><code>import os
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.environ["OPENAI_API_KEY"]</code></pre>
+
+      <div class="ad-slot" data-ad-slot=""></div>
+
+      <h3>Streamlit Community Cloud → st.secrets</h3>
+      <p>
+        Streamlit Cloud에 배포한다면 대시보드의 <b>Secrets</b> 칸에 값을 넣고, 코드에서는 이렇게 읽습니다.
+      </p>
+      <pre><code>import streamlit as st
+api_key = st.secrets["OPENAI_API_KEY"]</code></pre>
+      <p>로컬 테스트용으로는 <code>.streamlit/secrets.toml</code>에 넣되, 이 파일 역시 커밋하면 안 됩니다.</p>
+
+      <h2>가장 중요한 한 줄: .gitignore</h2>
+      <p>
+        비밀 파일이 실수로 올라가는 걸 막는 안전장치가 <code>.gitignore</code>입니다. 아래를 반드시 추가하세요.
+      </p>
+      <pre><code># .gitignore
+.env
+.streamlit/secrets.toml</code></pre>
+      <p>
+        그리고 팀원이나 미래의 나를 위해, 값이 비어 있는 <b>예시 파일</b>을 대신 올려두면 좋습니다.
+      </p>
+      <pre><code># .env.example  (이건 커밋해도 안전 — 값이 비어 있으니까)
+OPENAI_API_KEY=</code></pre>
+
+      <h2>보너스: 요금 폭탄 2차 방어선</h2>
+      <p>키를 잘 숨겨도, 코드 버그로 API를 무한 반복 호출하면 요금이 폭발할 수 있습니다. 습관을 들이세요.</p>
+      <ul>
+        <li>API 호출은 타임아웃·재시도(backoff)로 감싸고, 실패해도 앱이 죽지 않게 합니다.</li>
+        <li>한 번에 보내는 요청 크기와 횟수에 상한(가드)을 둡니다.</li>
+        <li>OpenAI 등 대시보드에서 <b>사용량 한도(usage limit)</b>를 설정해 둡니다.</li>
+      </ul>
+
+      <blockquote>
+        요약: <b>키는 코드 밖으로</b>(.env / st.secrets), <b>.gitignore로 잠그고</b>, 유출되면 즉시 폐기·재발급. 여기에 호출 상한까지.
+      </blockquote>
+
+      <div class="cta-inline">
+        <h3>이 세팅, 프롬프트에 자동으로 넣어드려요</h3>
+        <p>"비밀 키가 들어가나요?"에 답하면 배포처에 맞는 보안 규칙이 프롬프트에 강제됩니다.</p>
+        <a class="btn-hero" href="../app.html">무료로 프롬프트 만들기 →</a>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div class="wrap">Nocalhostmore · <a href="index.html">다른 가이드 보기</a></div>
+    </footer>
+  </body>
+</html>
