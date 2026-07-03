@@ -1,0 +1,49 @@
+name: Deploy site to GitHub Pages
+
+# 웹사이트(index.html·app.html·guides·assets·js·icons)를 GitHub Pages 로 배포.
+# 기본 브랜치에 push 하면 자동 실행되어 https://<user>.github.io/<repo>/ 에 올라간다.
+
+on:
+  push:
+    branches: [claude/nocalhostmore-checklist-l21z3d]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble static site (개발 파일 제외)
+        run: |
+          mkdir -p _site
+          cp -r index.html app.html popup.html manifest.json robots.txt sitemap.xml \
+                assets js icons guides _site/
+          touch _site/.nojekyll
+
+      - name: Setup Pages (없으면 자동 활성화)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

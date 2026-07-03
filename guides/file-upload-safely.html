@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>파일 업로드, 이렇게 하면 서버가 터진다 (UUID·용량·임시 삭제) · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="파일 업로드 기능이 서버 용량을 터뜨리고 파일을 섞는 이유. UUID 파일명, 용량·확장자 검증, finally 강제 삭제, 사용자별 격리까지 안전한 처리법."
+    />
+    <link rel="icon" href="../icons/icon48.png" />
+    <link rel="stylesheet" href="../assets/components.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="../index.html">
+          <img src="../icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">가이드</a>
+          <a class="nav-cta" href="../app.html">지금 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <article class="article">
+      <div class="kicker">파일 · 안정성</div>
+      <h1>파일 업로드, 이렇게 하면 서버가 터진다</h1>
+      <p class="meta">약 6분 · 파일 업로드 기능을 붙이는 사람을 위한 글</p>
+
+      <p>
+        "이미지 올리면 처리해주는 기능"은 인기 있지만, 바이브 코딩으로 대충 붙이면 세 가지가 터집니다. <b>파일이 서로 덮어써지고,
+        디스크가 가득 차고, 남의 파일에 접근</b>됩니다. 하나씩 막아봅시다.
+      </p>
+
+      <h2>1. 원본 파일명을 그대로 쓰면 파일이 섞인다</h2>
+      <p>
+        두 사용자가 똑같이 <code>photo.jpg</code>를 올리면? 뒤에 올린 파일이 앞의 것을 <b>덮어씁니다.</b> 게다가 파일명에
+        <code>../../etc/passwd</code> 같은 경로를 넣으면 엉뚱한 위치에 저장되는 <b>경로 조작(path traversal)</b> 공격도 가능합니다.
+      </p>
+      <blockquote>
+        해결: 사용자가 보낸 파일명을 신뢰하지 마세요. 저장할 땐 <code>uuid4()</code>로 <b>고유한 이름</b>을 새로 만들고, 원래 확장자만
+        검증해서 붙입니다.
+      </blockquote>
+      <pre><code>import uuid, os
+ext = os.path.splitext(uploaded.name)[1].lower()
+if ext not in {".jpg", ".png", ".pdf"}:
+    raise ValueError("허용되지 않는 형식")
+safe_name = f"{uuid.uuid4().hex}{ext}"</code></pre>
+
+      <h2>2. 안 지우면 디스크가 가득 찬다</h2>
+      <p>
+        임시로 저장한 파일을 처리 후 지우지 않으면, 업로드가 쌓이면서 서버 저장공간이 꽉 찹니다. 특히 처리 중 <b>에러가 나면</b> 정리
+        코드를 건너뛰기 쉽죠. 그래서 <code>try/finally</code>의 <code>finally</code>에서 <b>무조건</b> 지워야 합니다.
+      </p>
+      <pre><code>try:
+    process(tmp_path)      # 여기서 에러가 나도
+finally:
+    if os.path.exists(tmp_path):
+        os.remove(tmp_path)   # 파일은 반드시 정리된다</code></pre>
+
+      <div class="ad-slot" data-ad-slot=""></div>
+
+      <h2>3. 용량 제한이 없으면 한 방에 터진다</h2>
+      <p>
+        누군가 5GB 파일을 올리면 서버 메모리가 폭발합니다. 서버 단에서 <b>최대 크기</b>를 정하고, 초과하면 거부하세요. 확장자·MIME
+        타입도 함께 확인해 "이미지인 척하는 실행 파일" 같은 걸 걸러냅니다.
+      </p>
+
+      <h2>영구 보관이라면: 로컬 말고 오브젝트 스토리지</h2>
+      <p>
+        "나중에도 볼 수 있게 저장"해야 한다면 서버 로컬 디스크는 답이 아닙니다(재배포 때 사라짐). AWS S3 같은 오브젝트 스토리지에
+        저장하고, 경로를 <b>사용자 ID로 격리</b>하세요. 예: <code>uploads/{user_id}/{uuid}.jpg</code>. 이렇게 하면 A가 B의 파일에
+        접근하는 사고를 구조적으로 막습니다.
+      </p>
+
+      <blockquote>
+        요약: <b>UUID 파일명</b> + <b>확장자·용량 검증</b> + <b>finally 강제 삭제</b>, 영구 보관은 <b>S3 + 사용자별 폴더</b>.
+      </blockquote>
+
+      <div class="cta-inline">
+        <h3>파일 처리 규칙, 자동으로 넣어드려요</h3>
+        <p>"일회성 / 영구 보관"만 고르면 위 규칙이 프롬프트에 강제됩니다.</p>
+        <a class="btn-hero" href="../app.html">무료로 프롬프트 만들기 →</a>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div class="wrap">Nocalhostmore · <a href="index.html">다른 가이드 보기</a></div>
+    </footer>
+  </body>
+</html>

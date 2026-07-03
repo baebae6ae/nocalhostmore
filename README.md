@@ -44,8 +44,19 @@ Nocalhostmore는 코딩을 시작하기 **전에**, 소프트웨어 공학의 �
 python3 -m http.server 8000
 # http://localhost:8000/ (랜딩) · /app.html (생성기) · /guides/ (가이드)
 ```
-배포는 이 저장소를 **Vercel·Netlify·GitHub Pages**에 연결하면 끝입니다(빌드 불필요, 무료).
-배포 후 `robots.txt`·`sitemap.xml`의 도메인, `js/ads.js`의 `ADSENSE_CLIENT`를 실제 값으로 바꾸세요.
+#### 지금 라이브 (GitHub Pages · 자동)
+기본 브랜치에 push 하면 `.github/workflows/deploy-pages.yml`이 자동으로 배포합니다.
+- URL: `https://baebae6ae.github.io/nocalhostmore/`
+- 내부 링크가 모두 상대경로라 서브패스에서도 정상 동작합니다.
+
+#### "정식 서비스"로 승격 (Vercel + 커스텀 도메인, 추천)
+가장 프로처럼 보이는 방법은 **Vercel + 내 도메인**입니다(서버리스 함수로 나중에 결제도 가능).
+1. [vercel.com](https://vercel.com) 로그인 → **Add New → Project** → 이 저장소 Import (빌드 설정 없음, Framework: Other)
+2. 배포되면 `xxx.vercel.app` 즉시 생성. **Settings → Domains**에서 구입한 도메인 연결(HTTPS 자동)
+3. `robots.txt`·`sitemap.xml`의 도메인, `js/ads.js`의 `ADSENSE_CLIENT`를 실제 값으로 교체
+
+> AdSense는 **실제 도메인 + 콘텐츠**가 있어야 승인됩니다. 커스텀 도메인 연결 후 `guides/`를 늘려
+> 신청하세요.
 
 ### 크롬 확장 (개발자 모드)
 1. `chrome://extensions` → **개발자 모드** 켜기
