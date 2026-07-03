@@ -17,9 +17,12 @@ const PRO_KEY = 'nch_pro';
 const HIST_KEY = 'nch_history';
 const HIST_MAX = 12;
 
-// 후원 링크. 실제 URL이 준비되면 채우세요. 비어 있으면 섹션 자체를 표시하지 않습니다.
-// (ads.js 의 ADSENSE_CLIENT 와 같은 플레이스홀더 패턴)
-const DONATE_URL = '';
+// 후원 링크. 실제 URL이 준비되면 채우세요. 둘 다 비어 있으면 섹션 자체를 표시하지 않고,
+// 하나만 채워도 그것만 보여줍니다. (ads.js 의 ADSENSE_CLIENT 와 같은 플레이스홀더 패턴)
+const DONATE_URLS = {
+  toss: '', // 토스 후원 링크 (toss.me/... 형태)
+  bmc: '', // Buy Me a Coffee 링크 (buymeacoffee.com/... 형태)
+};
 
 const isPro = () => localStorage.getItem(PRO_KEY) === '1';
 const setPro = () => localStorage.setItem(PRO_KEY, '1');
@@ -209,15 +212,25 @@ function openPaywall(triggerEl, onUnlock) {
 
 /* ---------- 후원 링크 (절제된 톤) ---------- */
 function buildDonateLine() {
-  if (!DONATE_URL) return null;
+  const entries = [
+    DONATE_URLS.toss && { href: DONATE_URLS.toss, label: '토스 후원' },
+    DONATE_URLS.bmc && { href: DONATE_URLS.bmc, label: 'Buy Me a Coffee' },
+  ].filter(Boolean);
+  if (entries.length === 0) return null;
+
   const p = document.createElement('p');
   p.className = 'donate-line';
-  const a = document.createElement('a');
-  a.href = DONATE_URL;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  a.textContent = '커피 한 잔';
-  p.append('이 프롬프트가 시간을 아꼈다면, ', a, '으로 응원할 수 있어요.');
+  p.append('이 프롬프트가 시간을 아꼈다면, ');
+  entries.forEach((entry, i) => {
+    const a = document.createElement('a');
+    a.href = entry.href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = entry.label;
+    p.append(a);
+    if (i < entries.length - 1) p.append(' 또는 ');
+  });
+  p.append('으로 응원할 수 있어요.');
   return p;
 }
 
