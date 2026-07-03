@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>코드 진단 · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="이미 짜둔 코드를 붙여넣으면 하드코딩된 비밀 키, 빈 예외 처리, SQL 인젝션 의심 패턴 등을 브라우저에서만 스캔해 보여주는 무료 진단 도구."
+    />
+    <link rel="icon" href="icons/icon48.png" />
+    <link rel="stylesheet" href="assets/components.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="index.html">
+          <img src="icons/icon48.png" alt="" />
+          <span>nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="guides/index.html">가이드</a>
+          <a href="index.html">홈</a>
+          <a class="nav-cta" href="app.html">프롬프트 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="wrap section diag-page">
+      <div class="kicker">코드 진단</div>
+      <h2>내 코드, 프로덕션 레벨인가요?</h2>
+      <p class="sub">
+        이미 AI로 짜뒀거나 짜는 중인 코드를 붙여넣으면, 하드코딩된 비밀 키·빈 예외 처리·SQL 인젝션 의심 패턴 같은
+        흔한 문제를 정규식 기반으로 훑어봅니다. <b>코드는 서버로 전송되지 않고, 이 브라우저 안에서만</b> 처리됩니다.
+      </p>
+
+      <div class="diag-layout">
+        <textarea
+          id="codeInput"
+          class="q-textarea diag-textarea"
+          placeholder="여기에 파이썬 또는 JS 코드를 붙여넣으세요. 여러 파일 내용을 이어 붙여도 됩니다."
+          spellcheck="false"
+        ></textarea>
+        <button id="diagBtn" class="btn-primary diag-btn">진단하기</button>
+      </div>
+
+      <div id="diagResult" class="diag-result" hidden></div>
+
+      <div class="ad-slot" data-ad-slot=""></div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        nocalhostmore · <a href="guides/index.html">가이드</a> · <a href="app.html">프롬프트 만들기</a> ·
+        <a href="privacy.html">개인정보처리방침</a> · <a href="terms.html">이용약관</a>
+      </div>
+    </footer>
+
+    <script type="module" src="js/diagnose.js"></script>
+    <script type="module" src="js/ads-init.js"></script>
+  </body>
+</html>

@@ -12,6 +12,7 @@ import {
 import { buildPrompt, deriveSpec } from '../js/promptBuilder.js';
 import { buildRepo } from '../js/repoBuilder.js';
 import { makeZipBytes } from '../js/zip.js';
+import { scanCode } from '../js/diagnose.js';
 
 let pass = 0;
 function ok(name, cond) {
@@ -159,5 +160,86 @@ ok('zip 끝에 EOCD(PK\\x05\\x06)', (() => {
   return false;
 })());
 ok('zip 바이트 길이 > 0', zbytes.length > 100);
+
+console.log('\n[11] 코드 진단(scanCode) — 정규식 휴리스틱 스캐너');
+const cleanCode = `
+def add(a, b):
+    return a + b
+
+def main():
+    result = add(1, 2)
+    print(result)
+`;
+const cleanResult = scanCode(cleanCode);
+ok('클린 코드: 발견 없음', cleanResult.findings.length === 0);
+ok('클린 코드: 100점', cleanResult.score === 100);
+
+const secretCode = `
+import openai
+api_key = "sk-abcdefghijklmnopqrstuvwxyz123456"
+client = openai.OpenAI(api_key=api_key)
+`;
+const secretResult = scanCode(secretCode);
+ok('하드코딩 키: 발견됨', secretResult.findings.some((f) => f.id === 'secret'));
+ok('하드코딩 키: 감점됨', secretResult.score < 100);
+
+const exceptCode = `
+try:
+    risky()
+except Exception:
+    pass
+`;
+const exceptResult = scanCode(exceptCode);
+ok('빈 except: 발견됨', exceptResult.findings.some((f) => f.id === 'empty-except'));
+
+const jsCatchCode = `
+try {
+  risky();
+} catch (e) {}
+`;
+ok('JS 빈 catch: 발견됨', scanCode(jsCatchCode).findings.some((f) => f.id === 'empty-except'));
+
+const evalCode = `
+def run(user_input):
+    return eval(user_input)
+`;
+ok('eval 사용: 발견됨', scanCode(evalCode).findings.some((f) => f.id === 'dangerous-fn'));
+
+const sqlCode = `
+def get_user(name):
+    query = f"SELECT * FROM users WHERE name = '{name}'"
+    cursor.execute(query)
+`;
+ok('SQL 인젝션 의심(f-string): 발견됨', scanCode(sqlCode).findings.some((f) => f.id === 'sql-injection'));
+
+const sqlConcatCode = `cursor.execute("SELECT * FROM users WHERE id = " + user_id)`;
+ok('SQL 인젝션 의심(문자열 +): 발견됨', scanCode(sqlConcatCode).findings.some((f) => f.id === 'sql-injection'));
+
+const filenameCode = `
+def save(uploaded_file):
+    with open(uploaded_file.name, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+`;
+ok('원본 파일명 저장 경로 사용: 발견됨', scanCode(filenameCode).findings.some((f) => f.id === 'raw-filename'));
+
+const globalCode = `
+def handle_request(user_data):
+    global current_user
+    current_user = user_data
+`;
+ok('전역 변수(Streamlit 맥락 아님): 발견됨', scanCode(globalCode).findings.some((f) => f.id === 'global-state'));
+
+const globalWithStreamlitCode = `
+import streamlit as st
+def handle():
+    global counter
+    counter = st.session_state.get("counter", 0)
+`;
+ok(
+  '전역 변수(근처에 st. 있음): 발견 안 됨',
+  !scanCode(globalWithStreamlitCode).findings.some((f) => f.id === 'global-state')
+);
+
+ok('점수는 항상 0~100 사이', [cleanResult, secretResult, exceptResult].every((r) => r.score >= 0 && r.score <= 100));
 
 console.log(`\n✅ 전체 통과: ${pass}개 검증\n`);
