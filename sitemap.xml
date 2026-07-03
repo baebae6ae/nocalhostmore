@@ -11,6 +11,9 @@
   <url><loc>https://nocalhostmore.example/guides/need-database-cost.html</loc><priority>0.6</priority></url>
   <url><loc>https://nocalhostmore.example/guides/file-upload-safely.html</loc><priority>0.6</priority></url>
   <url><loc>https://nocalhostmore.example/guides/big-project-without-truncation.html</loc><priority>0.6</priority></url>
+  <url><loc>https://nocalhostmore.example/guides/silent-errors.html</loc><priority>0.6</priority></url>
+  <url><loc>https://nocalhostmore.example/guides/dont-build-login-yet.html</loc><priority>0.6</priority></url>
+  <url><loc>https://nocalhostmore.example/guides/when-you-dont-need-this.html</loc><priority>0.6</priority></url>
   <url><loc>https://nocalhostmore.example/about.html</loc><priority>0.4</priority></url>
   <url><loc>https://nocalhostmore.example/privacy.html</loc><priority>0.2</priority></url>
   <url><loc>https://nocalhostmore.example/terms.html</loc><priority>0.2</priority></url>

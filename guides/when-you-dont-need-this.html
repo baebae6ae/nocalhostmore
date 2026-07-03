@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이 체크리스트, 안 써도 되는 경우 · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="모든 프로젝트에 프로덕션 레벨 설계가 필요한 건 아닙니다. 과설계(overengineering)를 피하고, 지금 규모에 맞는 만큼만 신경 쓰는 판단 기준."
+    />
+    <link rel="icon" href="../icons/icon48.png" />
+    <link rel="stylesheet" href="../assets/components.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="../index.html">
+          <img src="../icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">가이드</a>
+          <a class="nav-cta" href="../app.html">지금 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <article class="article">
+      <div class="kicker">균형 잡기</div>
+      <h1>이 체크리스트, 안 써도 되는 경우</h1>
+      <p class="meta">약 4분 · 모든 것에 프로덕션 레벨을 적용해야 하나 고민하는 사람을 위한 글</p>
+
+      <p>
+        지금까지 여러 글에서 "이렇게 안 하면 배포할 때 터진다"고 강조했습니다. 그런데 정직하게 말씀드리면, <b>모든 프로젝트가 이 정도
+        엄격함을 필요로 하지는 않습니다.</b> 과설계(overengineering)도 실제 문제입니다 — 안 쓸 기능을 미리 만드느라 정작 중요한 걸
+        늦게 만드는 것도 시간 낭비니까요.
+      </p>
+
+      <h2>체크리스트를 가볍게 봐도 되는 경우</h2>
+      <ul>
+        <li>
+          <b>나 혼자, 한 번 쓰고 버릴 스크립트</b> — 엑셀 정리, 일회성 데이터 변환처럼 "오늘 쓰고 안 쓸" 도구는 전역 변수를 써도,
+          에러 처리를 대충 해도 큰 문제가 없습니다.
+        </li>
+        <li>
+          <b>프로토타입 단계</b> — "이 아이디어가 될지 안 될지도 모르는" 단계에서는, 보안·확장성보다 <b>빨리 만들어서 반응을 보는
+          게</b> 우선입니다. 반응이 좋으면 그때 구조를 다시 잡아도 늦지 않습니다.
+        </li>
+        <li>
+          <b>완전히 닫힌 환경</b> — 인터넷에 노출되지 않는 사내 전용 도구, 로컬 실행 전용 스크립트는 외부 공격 표면 자체가
+          없으므로 보안 규칙의 우선순위가 낮습니다.
+        </li>
+      </ul>
+
+      <div class="ad-slot" data-ad-slot=""></div>
+
+      <h2>그래도 절대 타협하면 안 되는 것</h2>
+      <p>규모와 무관하게 아래 두 가지만큼은 프로토타입 단계에서도 지키길 권합니다. 비용이 거의 안 들기 때문입니다.</p>
+      <ul>
+        <li><b>비밀 키를 코드에 하드코딩하지 않기</b> — 프로토타입이어도 GitHub에 올리는 순간 위험은 똑같습니다.</li>
+        <li><b>에러를 완전히 숨기지 않기</b> — 최소한의 로그는 나중에 디버깅 시간을 몇 배로 줄여줍니다.</li>
+      </ul>
+
+      <h2>판단 기준: "이게 커질 가능성이 있는가?"</h2>
+      <p>
+        가장 실용적인 질문은 이겁니다. <b>"이 프로젝트가 잘 되면, 남에게 보여주거나 계속 쓰게 될까?"</b> 그렇다는 확신이 조금이라도
+        있다면, 처음부터 이 체크리스트를 적용하는 편이 결국 시간을 아낍니다. "일단 되게만 만들고 나중에 고치자"로 시작한 코드는,
+        실제로 잘 되기 시작하면 <b>고칠 시간이 없어서</b> 그대로 굳어지는 경우가 대부분이기 때문입니다.
+      </p>
+
+      <blockquote>
+        요약: 완전히 개인적이고 일회성인 도구는 가볍게 만들어도 됩니다. 하지만 "이게 커질 수도 있다"는 생각이 든다면, 처음부터
+        제대로 하는 게 결국 더 빠릅니다.
+      </blockquote>
+
+      <div class="cta-inline">
+        <h3>내 프로젝트는 어느 쪽일까?</h3>
+        <p>체크리스트의 첫 질문("나 혼자 vs 인터넷에 배포")이 바로 이 판단을 도와줍니다.</p>
+        <a class="btn-hero" href="../app.html">무료로 확인하기 →</a>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div class="wrap">Nocalhostmore · <a href="index.html">다른 가이드 보기</a> ·
+        <a href="../privacy.html">개인정보처리방침</a> · <a href="../terms.html">이용약관</a></div>
+    </footer>
+    <script type="module" src="../js/ads-init.js"></script>
+  </body>
+</html>

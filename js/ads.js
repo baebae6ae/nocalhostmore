@@ -1,9 +1,12 @@
 /**
  * ads.js — Google AdSense 슬롯 헬퍼.
  *
- * 실제 게시자 ID를 넣기 전까지는 '광고 자리' 플레이스홀더를 보여준다.
- * 승인/발급 후 아래 ADSENSE_CLIENT 와 각 슬롯의 data-ad-slot 를 채우면
- * 자동으로 실제 광고가 로드된다.
+ * 발급받은 ADSENSE_CLIENT 를 채우면 실제 광고가 로드된다.
+ * 그 전(심사 대기 중 포함)에는 광고 슬롯을 **완전히 숨긴다** — Google의 심사
+ * 기준상 빈 광고 박스나 "광고 영역" 같은 표시는 사이트가 "미완성(under
+ * construction)"으로 보이게 해 반려 사유가 될 수 있다
+ * (참고: support.google.com/adsense/answer/81904 "site not approved" 사유).
+ * 레이아웃 확인이 필요하면 URL에 `?adsdebug=1` 을 붙여 플레이스홀더를 볼 수 있다.
  *
  * ⚠️ AdSense 정책: 콘텐츠가 얇은 페이지엔 승인이 어렵다. guides/ 의 글이
  *    광고 지면 역할을 한다. 도구 페이지엔 과한 광고를 넣지 말 것.
@@ -48,10 +51,21 @@ export function renderAd(el) {
     } catch (e) {
       /* noop */
     }
-  } else {
-    // 플레이스홀더 (레이아웃 확인용)
+  } else if (isDebugMode()) {
+    // 개발자용 레이아웃 확인 (?adsdebug=1 일 때만). 실제 방문자에겐 보이지 않는다.
     el.classList.add('ad-placeholder');
-    el.innerHTML = '<span>광고 영역 (AdSense 승인 후 표시)</span>';
+    el.innerHTML = '<span>광고 영역 (디버그 전용 미리보기)</span>';
+  } else {
+    // 광고가 없을 땐 자리 자체를 완전히 숨겨, 심사 중에도 "미완성" 인상을 주지 않는다.
+    el.style.display = 'none';
+  }
+}
+
+function isDebugMode() {
+  try {
+    return new URLSearchParams(window.location.search).get('adsdebug') === '1';
+  } catch (e) {
+    return false;
   }
 }
 

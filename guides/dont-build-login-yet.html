@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 기능, 정말 지금 필요한가요? · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="회원가입·로그인은 생각보다 훨씬 무거운 기능입니다. 지금 정말 필요한지 판단하는 기준과, 나중에 쉽게 추가할 수 있게 미리 대비하는 법."
+    />
+    <link rel="icon" href="../icons/icon48.png" />
+    <link rel="stylesheet" href="../assets/components.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="../index.html">
+          <img src="../icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">가이드</a>
+          <a class="nav-cta" href="../app.html">지금 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <article class="article">
+      <div class="kicker">아키텍처 · 판단</div>
+      <h1>로그인 기능, 정말 지금 필요한가요?</h1>
+      <p class="meta">약 5분 · "일단 회원가입부터 만들어야지"라고 생각하는 사람을 위한 글</p>
+
+      <p>
+        많은 바이브 코더가 프로젝트를 시작하자마자 "회원가입·로그인"부터 만듭니다. 왠지 "제대로 된 서비스"라면 당연히 있어야 할 것
+        같으니까요. 그런데 이건 종종 <b>가장 먼저 만들 필요가 없는 기능</b>입니다. 이 글은 다른 가이드들과 달리, "무조건 만들어라"가
+        아니라 <b>"진짜 필요한지 먼저 따져보자"</b>는 이야기입니다.
+      </p>
+
+      <h2>로그인은 생각보다 무겁다</h2>
+      <p>로그인 하나를 "제대로" 만들려면 아래가 전부 딸려 옵니다.</p>
+      <ul>
+        <li>비밀번호 해싱·저장, 비밀번호 재설정 흐름</li>
+        <li>이메일 인증 또는 소셜 로그인 연동</li>
+        <li>세션/토큰 관리, 로그아웃, 자동 로그인</li>
+        <li>"내 정보 수정", "회원 탈퇴" 같은 부가 화면</li>
+        <li>남의 계정에 접근 못 하게 막는 권한 검사 (가장 실수 많이 나는 지점)</li>
+      </ul>
+      <p>
+        이걸 다 만드는 동안, 정작 서비스의 핵심 기능은 뒷전으로 밀립니다. 그리고 권한 검사를 어설프게 하면, "로그인은 되는데 남의
+        데이터가 보이는" 훨씬 심각한 보안 사고로 이어집니다.
+      </p>
+
+      <h2>정말 필요한 경우</h2>
+      <p>아래에 해당하면 로그인이 꼭 필요합니다. 미루지 마세요.</p>
+      <ul>
+        <li>사용자마다 <b>"내 기록"</b>이 있고, 그걸 다음에 다시 봐야 한다</li>
+        <li>결제나 개인정보처럼 <b>본인 확인이 반드시 필요</b>하다</li>
+        <li>사용자 간 권한 차이(관리자/일반 회원)가 있다</li>
+      </ul>
+
+      <div class="ad-slot" data-ad-slot=""></div>
+
+      <h2>아직 필요 없을 수도 있는 경우</h2>
+      <ul>
+        <li>지금은 "일단 만들어서 반응을 보고 싶다" 단계다 (MVP)</li>
+        <li>브라우저에 저장해도 충분하다 — 예: 개인용 도구는 <code>localStorage</code>로 대체 가능</li>
+        <li>"나중에 계정 시스템이 필요할 수도 있으니까"라는 막연한 이유뿐이다</li>
+      </ul>
+      <p>
+        이런 경우엔 로그인 없이 먼저 출시하고, 정말 "내 계정이 있어야 하는 이유"가 생겼을 때 추가하는 게 낫습니다. 기능을 나중에
+        더하는 건 어렵지 않지만, 처음부터 과하게 만들어두고 안 쓰는 건 시간 낭비입니다.
+      </p>
+
+      <h2>나중에 쉽게 추가하려면</h2>
+      <p>지금 로그인을 안 만들더라도, 나중을 위해 이 정도는 미리 해두면 좋습니다.</p>
+      <ul>
+        <li>데이터 모델에 <code>user_id</code> 컬럼 자리를 비워서라도 설계해두기</li>
+        <li>비즈니스 로직과 화면을 분리해두기 (로그인 붙일 때 화면만 안 갈아엎어도 되게)</li>
+      </ul>
+
+      <blockquote>
+        요약: 로그인은 "당연히 있어야 하는 것"이 아니라 <b>"내 데이터가 필요한 순간"</b> 붙이는 기능입니다. 무작정 먼저 만들지
+        마세요.
+      </blockquote>
+
+      <div class="cta-inline">
+        <h3>내 서비스엔 로그인이 필요할까?</h3>
+        <p>체크리스트에서 "각자 로그인해서 내 데이터를 본다"를 고를 때만 자동으로 로그인 규칙이 들어갑니다.</p>
+        <a class="btn-hero" href="../app.html">무료로 확인하기 →</a>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div class="wrap">Nocalhostmore · <a href="index.html">다른 가이드 보기</a> ·
+        <a href="../privacy.html">개인정보처리방침</a> · <a href="../terms.html">이용약관</a></div>
+    </footer>
+    <script type="module" src="../js/ads-init.js"></script>
+  </body>
+</html>

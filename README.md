@@ -59,9 +59,10 @@ python3 -m http.server 8000
 #### Google AdSense 신청 절차
 1. 배포된 사이트(가능하면 커스텀 도메인)로 [google.com/adsense](https://www.google.com/adsense) 가입 → 사이트 추가
 2. 발급된 **인증 코드(`ca-pub-...`)** 를 `js/ads.js`의 `ADSENSE_CLIENT`에 넣고 커밋·배포
-   → 랜딩·가이드 8개 페이지 모두 `js/ads-init.js`로 광고 슬롯이 연결돼 있어 자동으로 광고가 뜬다.
+   → 랜딩·가이드 11개 페이지 모두 `js/ads-init.js`로 광고 슬롯이 연결돼 있어 자동으로 광고가 뜬다.
+   (그 전까지는 광고 슬롯이 완전히 숨겨져 있어 "미완성" 인상을 주지 않는다 — `?adsdebug=1`로 레이아웃만 미리 확인 가능)
 3. 승인 후 `ads.txt`의 `pub-XXXXXXXXXXXXXXXX`를 실제 게시자 ID로 교체(필수 — 없으면 수익 제한)
-4. 심사에는 **개인정보처리방침**(`privacy.html`)·**이용약관**(`terms.html`)·**충분한 원본 콘텐츠**(`guides/` 8편)가
+4. 심사에는 **개인정보처리방침**(`privacy.html`)·**이용약관**(`terms.html`)·**충분한 원본 콘텐츠**(`guides/` 10편, 800자 이상 심층 글)가
    이미 준비돼 있습니다. 얇은 도구 페이지 하나만으로는 승인이 어려우니, 가이드를 계속 늘리는 것을 권장합니다.
 
 > 팁: 임시 배포 주소(`xxx-hash.vercel.app`)가 아니라 **고정 대표 주소**(프로젝트의 `Visit` 링크 또는 커스텀 도메인)로
@@ -151,7 +152,7 @@ nocalhostmore/
 ├── about.html · privacy.html · terms.html   # 웹: 소개·개인정보처리방침·이용약관(AdSense 필수)
 ├── guides/                # 웹: SEO 콘텐츠 허브(광고 지면)
 │   ├── index.html
-│   └── *.html             # 프로덕션 가이드 글 7편
+│   └── *.html             # 프로덕션 가이드 글 10편
 ├── manifest.json          # 확장: MV3 매니페스트
 ├── popup.html             # 확장: 팝업 진입점
 ├── assets/
@@ -195,7 +196,8 @@ npm test        # 질문 그래프·유도·프롬프트·레포·ZIP 검증 (84
 
 - [x] AI 도구별(채팅형/에이전트) 출력 프로토콜 분기 — 잘림 없이 큰 프로젝트 진행
 - [x] 웹사이트 전환 + 콘텐츠 허브(SEO) + 프리미엄(스타터 레포 zip)·히스토리·AdSense 지면
-- [x] Vercel 배포, 가이드 7편 확장, 개인정보처리방침·이용약관·소개 페이지(AdSense 심사 요건)
+- [x] Vercel 배포, 가이드 10편 확장, 개인정보처리방침·이용약관·소개 페이지(AdSense 심사 요건)
+- [x] Google 공식 AdSense 가이드라인 기반 사전 점검(미완성 인상 방지, 콘텐츠 분량, 내비게이션·문의)
 - [ ] 커스텀 도메인 연결 → Google AdSense 신청
 - [ ] 실제 결제(Stripe·Gumroad) 연결로 Pro 활성화
 - [ ] 생성 프롬프트 영어(EN) 버전 토글 (글로벌 사용자 대상)
