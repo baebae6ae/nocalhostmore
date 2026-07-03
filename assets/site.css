@@ -368,6 +368,44 @@ a:hover {
   font-size: 11px;
   color: var(--text-faint);
 }
+.hist-clear {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0 0 2px;
+}
+.hist-clear:hover {
+  color: var(--text-dim);
+}
+.hist-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+.hist-row .hist-item {
+  flex: 1;
+  min-width: 0;
+}
+.hist-del {
+  flex: none;
+  width: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-faint);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+.hist-del:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
 
 /* ---------- 광고 슬롯 ---------- */
 .ad-slot {
@@ -484,6 +522,38 @@ a:hover {
   text-align: center;
   margin-top: 12px;
   line-height: 1.5;
+}
+
+/* ---------- 후원 / 추천 인프라 (결과 화면) ---------- */
+.donate-line {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  line-height: 1.6;
+  margin-top: 14px;
+}
+.donate-line a {
+  color: var(--text-dim);
+}
+.infra-reco {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.infra-reco-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.infra-reco ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-dim);
 }
 
 /* ---------- 토스트 ---------- */

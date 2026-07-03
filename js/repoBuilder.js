@@ -18,6 +18,8 @@ function slugify(s) {
   return base || 'my-app';
 }
 
+const SITE_URL = 'https://nocalhostmore.example';
+
 export function buildRepo(spec, prompt, ideaText) {
   const projectName = slugify(ideaText);
   const files = [];
@@ -122,6 +124,9 @@ npx serve .
 ## 규칙(가드레일)
 - 비밀 키를 코드에 넣지 마세요(프론트엔드는 소스가 공개됩니다).
 - 사용자 입력은 검증하고 \`textContent\` 로 출력하세요(XSS 방지).
+
+---
+Nocalhostmore로 생성된 프로젝트 뼈대입니다. · ${SITE_URL}
 `
   );
 
@@ -334,7 +339,10 @@ ${
 }
 ## 규칙(가드레일)
 - 사용자별 상태는 \`st.session_state\` 에만 저장(전역 변수 금지).
-${spec.auth ? '- 비밀번호는 bcrypt 해싱, 조회는 본인(owner) 데이터만.\n' : ''}${spec.files ? '- 업로드 파일은 UUID 이름 + finally 에서 강제 삭제.\n' : ''}${spec.persist === 'db' ? '- DB는 SQLAlchemy ORM, raw SQL 금지.\n' : ''}`
+${spec.auth ? '- 비밀번호는 bcrypt 해싱, 조회는 본인(owner) 데이터만.\n' : ''}${spec.files ? '- 업로드 파일은 UUID 이름 + finally 에서 강제 삭제.\n' : ''}${spec.persist === 'db' ? '- DB는 SQLAlchemy ORM, raw SQL 금지.\n' : ''}
+---
+Nocalhostmore로 생성된 프로젝트 뼈대입니다. · ${SITE_URL}
+`
   );
 }
 
