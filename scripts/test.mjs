@@ -146,6 +146,11 @@ const reqs = pyRepo.files.find((f) => f.path === 'requirements.txt').content;
 ok('requirements 에 streamlit', reqs.includes('streamlit'));
 ok('requirements 에 passlib(로그인)', reqs.includes('passlib'));
 
+const webReadme = webRepo.files.find((f) => f.path === 'README.md').content;
+ok('web README 에 출처 백링크', webReadme.includes('Nocalhostmore로 생성된 프로젝트 뼈대입니다.'));
+const pyReadme = pyRepo.files.find((f) => f.path === 'README.md').content;
+ok('py README 에 출처 백링크', pyReadme.includes('Nocalhostmore로 생성된 프로젝트 뼈대입니다.'));
+
 console.log('\n[10] ZIP 인코더');
 const zbytes = makeZipBytes([
   { path: 'a/index.html', content: '<h1>hi</h1>' },
