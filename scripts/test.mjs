@@ -13,7 +13,8 @@ import { buildPrompt, deriveSpec } from '../js/promptBuilder.js';
 import { buildRepo } from '../js/repoBuilder.js';
 import { makeZipBytes } from '../js/zip.js';
 import { scanCode } from '../js/diagnose.js';
-import { PRESETS, getPreset, encodeAnswers, decodeAnswers, buildPresetFragmentUrl } from '../js/presets.js';
+import { PRESETS, getPreset, buildPresetFragmentUrl } from '../js/presets.js';
+import { encodeAnswers, decodeAnswers } from '../js/share.js';
 
 let pass = 0;
 function ok(name, cond) {
@@ -277,15 +278,54 @@ for (const preset of PRESETS) {
 ok('getPreset 로 슬러그 조회', getPreset('ai-chatbot').slug === 'ai-chatbot');
 ok('getPreset 없는 슬러그는 null', getPreset('no-such-preset') === null);
 
-console.log('\n[13] 프리셋 → 프래그먼트 링크 인코딩 (한글 라운드트립)');
-const sample = getPreset('ai-chatbot');
-const encoded = encodeAnswers(sample.answers);
-ok('base64 문자열 생성', typeof encoded === 'string' && encoded.length > 0);
-const decoded = decodeAnswers(encoded);
-ok('디코딩 결과가 원본과 동일(한글 포함)', JSON.stringify(decoded) === JSON.stringify(sample.answers));
-ok('idea 한글 텍스트가 안 깨짐', decoded.idea === sample.answers.idea);
-const url = buildPresetFragmentUrl(sample, '../app.html');
-ok('프래그먼트 URL 형식', url.startsWith('../app.html#s='));
-ok('프래그먼트 URL 이 base64 인코딩과 일치', url === `../app.html#s=${encoded}`);
+console.log('\n[13] 프리셋 → 프래그먼트 링크 인코딩 (share.js 재사용, 한글 라운드트립)');
+const presetSample = getPreset('ai-chatbot');
+const presetEncoded = encodeAnswers(presetSample.answers);
+ok('base64url 문자열 생성("s=" 프리픽스 포함)', presetEncoded.startsWith('s='));
+const presetDecoded = decodeAnswers(presetEncoded);
+ok('디코딩 결과가 원본과 동일(한글 포함)', JSON.stringify(presetDecoded) === JSON.stringify(presetSample.answers));
+ok('idea 한글 텍스트가 안 깨짐', presetDecoded.idea === presetSample.answers.idea);
+const presetUrl = buildPresetFragmentUrl(presetSample, '../app.html');
+ok('프래그먼트 URL 형식', presetUrl.startsWith('../app.html#s='));
+ok('프래그먼트 URL 이 encodeAnswers 결과와 일치', presetUrl === `../app.html#${presetEncoded}`);
+
+console.log('\n[14] 공유 링크 인코딩/디코딩 (share.js)');
+const shareAnswers = {
+  idea: '엑셀 파일을 올리면 AI가 요약해서 표로 그려주는 웹사이트',
+  deploy: 'deploy',
+  audience: 'private',
+  files: 'yes',
+  fileHandling: 'permanent',
+  secrets: 'yes',
+  aitool: 'agent',
+};
+const linkEncoded = encodeAnswers(shareAnswers);
+ok('인코딩 결과는 "s="로 시작', linkEncoded.startsWith('s='));
+ok('인코딩 결과에 원본 한글이 그대로 노출되지 않음(직렬화됨)', !linkEncoded.includes('엑셀'));
+const linkDecoded = decodeAnswers('#' + linkEncoded);
+ok('디코딩 결과가 원본과 동일(한글 왕복 포함)', JSON.stringify(linkDecoded) === JSON.stringify(shareAnswers));
+ok('idea 필드 한글이 정확히 복원됨', linkDecoded.idea === shareAnswers.idea);
+// '#' 없이 조각만 넘겨도 동작
+const linkDecoded2 = decodeAnswers(linkEncoded);
+ok('# 없이도 디코딩 가능', JSON.stringify(linkDecoded2) === JSON.stringify(shareAnswers));
+// 빈 답변도 왕복되어야 함
+ok('빈 객체도 왕복', JSON.stringify(decodeAnswers('#' + encodeAnswers({}))) === '{}');
+// 특수문자/이모지 포함 자유서술형 텍스트도 왕복
+const emojiAnswers = { idea: '팀 게시판 🎉 — "따옴표"와 줄바꿈\n포함' };
+ok(
+  '이모지·특수문자·줄바꿈 포함 텍스트 왕복',
+  decodeAnswers('#' + encodeAnswers(emojiAnswers)).idea === emojiAnswers.idea
+);
+// 잘못된/손상된 값은 null
+ok('빈 문자열은 null', decodeAnswers('') === null);
+ok('해시 없음은 null', decodeAnswers('#foo=bar') === null);
+ok('깨진 base64는 null(예외 없이)', decodeAnswers('#s=!!!not-valid-base64!!!') === null);
+ok('JSON이 아닌 값은 null', decodeAnswers('#s=' + Buffer.from('not json').toString('base64')) === null);
+
+// 프리셋(base64url 경유)과 순수 공유링크 인코딩이 완전히 같은 포맷/디코더를 공유하는지 교차 검증
+ok(
+  '프리셋 인코딩도 공유링크 디코더로 정확히 복원됨(포맷 통일 검증)',
+  JSON.stringify(decodeAnswers(presetEncoded)) === JSON.stringify(presetSample.answers)
+);
 
 console.log(`\n✅ 전체 통과: ${pass}개 검증\n`);

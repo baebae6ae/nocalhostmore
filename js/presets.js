@@ -16,6 +16,7 @@
  * 브라우저(ESM import)와 Node(scripts/test.mjs) 양쪽에서 그대로 import할 수 있다.
  * ------------------------------------------------------------------
  */
+import { encodeAnswers } from './share.js';
 
 export const PRESETS = [
   {
@@ -98,32 +99,10 @@ export function getPreset(slug) {
 }
 
 /**
- * answers 객체 → base64 문자열.
- * JSON.stringify → UTF-8 바이트 → base64 순서로 인코딩해 한글이 깨지지 않는다.
- * (표준 btoa 는 라틴1 범위 밖 문자를 다루지 못하므로 TextEncoder 로 바이트화한 뒤 넘긴다)
- */
-export function encodeAnswers(answers) {
-  const json = JSON.stringify(answers);
-  const bytes = new TextEncoder().encode(json);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary);
-}
-
-/** encodeAnswers 의 역변환. (지금은 이 파일 자체 테스트용 — 실제 소비는 공유링크 기능 쪽) */
-export function decodeAnswers(encoded) {
-  const binary = atob(encoded);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const json = new TextDecoder().decode(bytes);
-  return JSON.parse(json);
-}
-
-/**
  * 프리셋 → 공유링크 프래그먼트 URL.
- * 형식: `<basePath>#s=<base64(UTF-8 JSON)>`
- * (공유링크 기능이 이 프래그먼트 포맷을 그대로 읽어 위저드를 채우는 건 별도 브랜치의 몫)
+ * 인코딩은 js/share.js 의 encodeAnswers 를 그대로 재사용한다(단일 진실 공급원).
+ * encodeAnswers 는 이미 "s=..." 프리픽스를 포함한 문자열을 반환한다.
  */
 export function buildPresetFragmentUrl(preset, basePath = 'app.html') {
-  return `${basePath}#s=${encodeAnswers(preset.answers)}`;
+  return `${basePath}#${encodeAnswers(preset.answers)}`;
 }

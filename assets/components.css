@@ -16,7 +16,7 @@
   --border: #e5ddcd;
   --text: #221d16;
   --text-dim: #6b6152;
-  --text-faint: #9a8f7d;
+  --text-faint: #756b56;
   --accent: #a8461f;
   --accent-ink: #7a3216;
   --accent-soft: rgba(168, 70, 31, 0.1);
@@ -43,7 +43,7 @@
     --border: #3a3223;
     --text: #f1e9db;
     --text-dim: #b7ab95;
-    --text-faint: #85795f;
+    --text-faint: #8f8367;
     --accent: #e2803f;
     --accent-ink: #f3ab6f;
     --accent-soft: rgba(226, 128, 63, 0.16);
@@ -229,8 +229,8 @@ body {
 .unsure-btn {
   margin-top: 16px;
   width: 100%;
-  background: transparent;
-  border: 1px dashed var(--border);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
   color: var(--text-dim);
   border-radius: var(--radius);
   padding: 11px;
@@ -303,7 +303,7 @@ body {
   cursor: pointer;
   font: inherit;
   font-size: 13px;
-  padding: 4px 6px;
+  padding: 10px 12px;
   border-radius: 6px;
 }
 .btn-ghost:hover {

@@ -15,7 +15,8 @@
  * "프리셋 → 프래그먼트 인코딩"까지만 책임진다.
  * ------------------------------------------------------------------
  */
-import { getPreset, encodeAnswers } from './presets.js';
+import { getPreset } from './presets.js';
+import { encodeAnswers } from './share.js';
 
 const PREFILL_KEY = 'nch_preset_prefill';
 
@@ -33,7 +34,7 @@ function applyPresetFromQuery() {
     // localStorage 를 못 쓰는 환경(프라이빗 모드 등)이어도 프래그먼트 반영은 계속한다.
   }
 
-  location.hash = 's=' + encodeAnswers(preset.answers);
+  location.hash = encodeAnswers(preset.answers); // encodeAnswers 가 이미 "s=" 프리픽스를 포함한다
 }
 
 if (document.readyState === 'loading') {
