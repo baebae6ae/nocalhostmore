@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소개 · Nocalhostmore</title>
+    <meta
+      name="description"
+      content="Nocalhostmore는 왜 만들어졌나 — 바이브 코딩 초보가 반복해서 폐기하던 코드의 근본 원인을 해결하기 위한 프로덕션 프롬프트 제너레이터."
+    />
+    <link rel="icon" href="icons/icon48.png" />
+    <link rel="stylesheet" href="assets/components.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap nav-inner">
+        <a class="nav-brand" href="index.html">
+          <img src="icons/icon48.png" alt="" />
+          <span>Nocalhostmore</span>
+        </a>
+        <div class="nav-links">
+          <a href="guides/index.html">가이드</a>
+          <a class="nav-cta" href="app.html">지금 만들기</a>
+        </div>
+      </div>
+    </nav>
+
+    <article class="article">
+      <div class="kicker">소개</div>
+      <h1>왜 Nocalhostmore를 만들었나</h1>
+      <p class="meta">우리가 이 서비스를 만든 이유</p>
+
+      <p>
+        AI로 프로그램을 만드는 "바이브 코딩"은 놀랍도록 빠릅니다. 그런데 그 빠름 뒤에는 함정이 있습니다. 기능 구현에만
+        매몰되다 보면, 정작 <b>정식 서비스로 배포하는 순간 무너지는 코드</b>를 계속 만들게 됩니다. 여러 명이 접속하면 데이터가
+        섞이고, API 키가 새어나가 요금 폭탄을 맞고, 재배포하면 파일이 사라집니다. 그때마다 코드를 갈아엎는 악순환이죠.
+      </p>
+
+      <p>
+        문제의 뿌리는 실력이 아니라 <b>"코딩하기 전 설계"</b>에 있었습니다. 상태 관리, 멀티 테넌시, 비밀 키 관리 같은 소프트웨어
+        공학의 정석은 늘 존재했지만, 초보자에게는 그 용어 자체가 진입 장벽이었습니다.
+      </p>
+
+      <h2>우리의 접근</h2>
+      <p>
+        Nocalhostmore는 어려운 용어 대신 <b>일상 언어로 묻습니다.</b> "누가 쓰나요?", "파일을 올리나요?", "비밀 키가 들어가나요?"
+        같은 쉬운 질문에 답하면, 그 답을 상태 관리·보안·아키텍처 규칙으로 번역해 <b>AI가 처음부터 프로덕션 레벨 구조로 코드를
+        짜게 만드는 마스터 프롬프트</b>를 생성합니다.
+      </p>
+      <p>"기능은 AI가 짜고, 뼈대는 시스템이 잡는다" — 이것이 우리의 핵심 철학입니다.</p>
+
+      <h2>무엇을 제공하나</h2>
+      <ul>
+        <li><b>이륙 전 체크리스트</b> — 코딩 전 던져야 할 질문을 순서대로, 쉬운 말로 안내합니다.</li>
+        <li><b>가드레일 프롬프트</b> — ChatGPT·Claude·Cursor 등 어떤 AI 도구로 코딩하든 바로 쓸 수 있는 프롬프트를 생성합니다.</li>
+        <li><b>실전 가이드</b> — 프로덕션에서 실제로 겪는 문제들을 초보의 언어로 풀어 설명합니다.</li>
+        <li><b>스타터 레포(Pro)</b> — 답변에 맞춘 실행 가능한 프로젝트 뼈대를 zip으로 바로 받을 수 있습니다.</li>
+      </ul>
+
+      <div class="cta-inline">
+        <h3>지금 첫 프롬프트를 만들어보세요</h3>
+        <p>회원가입 없이 무료로 바로 시작할 수 있어요.</p>
+        <a class="btn-hero" href="app.html">무료로 시작하기 →</a>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        Nocalhostmore · <a href="index.html">홈</a> · <a href="privacy.html">개인정보처리방침</a> ·
+        <a href="terms.html">이용약관</a>
+      </div>
+    </footer>
+  </body>
+</html>
