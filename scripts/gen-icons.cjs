@@ -1,10 +1,11 @@
 /**
  * gen-icons.cjs
  * 의존성 없이 PNG 아이콘을 생성한다. (Node 내장 zlib만 사용)
- * 평평한 잉크색 배경 + 프롬프트 셰브런(`>`) + 체크마크(`✓`).
- *   `>_`는 PowerShell/터미널 앱 아이콘과 구분이 안 돼서, 밑줄을
- *   체크마크로 바꿨다 — "프롬프트에 체크리스트를"이라는 브랜드
- *   스토리를 담은 고유 마크. 체크는 액센트(테라코타)로 강조한다.
+ * 프롬프트 커서 `>_` 글리프 + 스퀴클(superellipse) 배지.
+ *   글리프는 `>_` 그대로 유지하되(터미널/프롬프트를 뜻하는 가장
+ *   직관적인 기호), 담는 그릇을 흔한 CSS 둥근 사각형 대신
+ *   연속 곡률(continuous-curvature) 스퀴클로 바꿔 특정 OS/앱
+ *   아이콘을 베낀 것처럼 보이지 않게 한다. 밑줄은 액센트(테라코타).
  *
  * 실행: node scripts/gen-icons.cjs
  */
@@ -21,21 +22,20 @@ function renderIcon(size) {
   const w = size;
   const h = size;
   const buf = Buffer.alloc(w * h * 4); // RGBA
-  const radius = size * 0.17; // 각진 느낌 유지 (터미널 창 느낌)
   const stroke = Math.max(1.4, size * 0.075);
 
-  // 프롬프트 ">" 셰브런 두 선분 + 체크마크 두 선분 (정규화 좌표 0~1)
+  // 프롬프트 ">" 셰브런 두 선분 + 밑줄 한 선분 (정규화 좌표 0~1)
   const p1 = { x: 0.24, y: 0.31 };
   const p2 = { x: 0.42, y: 0.49 };
   const p3 = { x: 0.24, y: 0.67 };
-  const c1 = { x: 0.5, y: 0.58 };
-  const c2 = { x: 0.62, y: 0.7 };
-  const c3 = { x: 0.82, y: 0.4 };
+  const underscoreY = 0.72;
+  const underscoreX0 = 0.54;
+  const underscoreX1 = 0.76;
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const i = (y * w + x) * 4;
-      const inside = insideRoundRect(x + 0.5, y + 0.5, w, h, radius);
+      const inside = insideSquircle(x + 0.5, y + 0.5, w, h);
       if (inside <= 0) {
         buf[i + 3] = 0;
         continue;
@@ -49,16 +49,13 @@ function renderIcon(size) {
         distToSegment(px, py, p1.x, p1.y, p2.x, p2.y),
         distToSegment(px, py, p2.x, p2.y, p3.x, p3.y)
       );
-      const dCheck = Math.min(
-        distToSegment(px, py, c1.x, c1.y, c2.x, c2.y),
-        distToSegment(px, py, c2.x, c2.y, c3.x, c3.y)
-      );
+      const dUnderscore = distToSegment(px, py, underscoreX0, underscoreY, underscoreX1, underscoreY);
 
       let col = INK;
       const chevronMask = smooth(dChevron, strokeN);
-      const checkMask = smooth(dCheck, strokeN);
+      const underscoreMask = smooth(dUnderscore, strokeN);
       if (chevronMask > 0) col = mix(col, CREAM, chevronMask);
-      if (checkMask > 0) col = mix(col, ACCENT, checkMask);
+      if (underscoreMask > 0) col = mix(col, ACCENT, underscoreMask);
 
       buf[i] = Math.round(col[0]);
       buf[i + 1] = Math.round(col[1]);
@@ -97,21 +94,22 @@ function distToSegment(px, py, ax, ay, bx, by) {
   return Math.hypot(px - cx, py - cy);
 }
 
-// 라운드 사각형 내부 판정(가장자리 안티앨리어싱 위해 0~1 반환)
-function insideRoundRect(x, y, w, h, r) {
-  const dxl = x;
-  const dxr = w - x;
-  const dyt = y;
-  const dyb = h - y;
-  let dist;
-  const nx = Math.min(dxl, dxr);
-  const ny = Math.min(dyt, dyb);
-  if (nx < r && ny < r) {
-    dist = r - Math.hypot(r - nx, r - ny);
-  } else {
-    dist = Math.min(nx, ny);
-  }
-  return Math.max(0, Math.min(1, dist));
+// 스퀴클(superellipse) 내부 판정 — |x/a|^n + |y/b|^n <= 1
+// 지수(n)를 4로 잡으면 iOS/Codex 아이콘 특유의 연속 곡률 형태가 나온다.
+// 가장자리 1px 정도는 안티앨리어싱을 위해 부드럽게 페이드한다.
+function insideSquircle(x, y, w, h) {
+  const cx = w / 2;
+  const cy = h / 2;
+  const a = w / 2;
+  const b = h / 2;
+  const n = 4;
+  const nx = Math.abs((x - cx) / a);
+  const ny = Math.abs((y - cy) / b);
+  const r = Math.pow(nx, n) + Math.pow(ny, n);
+  const edge = 1.5 / Math.min(w, h); // 픽셀 단위 페더 폭을 r 스케일로 근사
+  if (r <= 1 - edge) return 1;
+  if (r >= 1 + edge) return 0;
+  return 1 - (r - (1 - edge)) / (edge * 2);
 }
 
 /* ---------- 최소 PNG 인코더 ---------- */
