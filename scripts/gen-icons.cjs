@@ -1,11 +1,12 @@
 /**
  * gen-icons.cjs
  * 의존성 없이 PNG 아이콘을 생성한다. (Node 내장 zlib만 사용)
- * 프롬프트 커서 `>_` 글리프 + 스퀴클(superellipse) 배지.
+ * 프롬프트 커서 `>_` 글리프 + 모서리를 잘라낸 태그(tag) 배지.
  *   글리프는 `>_` 그대로 유지하되(터미널/프롬프트를 뜻하는 가장
- *   직관적인 기호), 담는 그릇을 흔한 CSS 둥근 사각형 대신
- *   연속 곡률(continuous-curvature) 스퀴클로 바꿔 특정 OS/앱
- *   아이콘을 베낀 것처럼 보이지 않게 한다. 밑줄은 액센트(테라코타).
+ *   직관적인 기호), 담는 틀은 스퀴클(superellipse) 바탕에 우측 상단
+ *   모서리를 대각선으로 잘라내 "체크리스트/태그"를 연상시키는
+ *   비대칭 실루엣으로 만들었다 — 흔한 둥근 사각형이나 특정 OS/앱
+ *   아이콘과 겹치지 않는 고유 형태. 밑줄은 액센트(테라코타).
  *
  * 실행: node scripts/gen-icons.cjs
  */
@@ -35,7 +36,7 @@ function renderIcon(size) {
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const i = (y * w + x) * 4;
-      const inside = insideSquircle(x + 0.5, y + 0.5, w, h);
+      const inside = insideBadge(x + 0.5, y + 0.5, w, h);
       if (inside <= 0) {
         buf[i + 3] = 0;
         continue;
@@ -95,7 +96,7 @@ function distToSegment(px, py, ax, ay, bx, by) {
 }
 
 // 스퀴클(superellipse) 내부 판정 — |x/a|^n + |y/b|^n <= 1
-// 지수(n)를 4로 잡으면 iOS/Codex 아이콘 특유의 연속 곡률 형태가 나온다.
+// 지수(n)를 4로 잡으면 연속 곡률(continuous-curvature) 형태가 나온다.
 // 가장자리 1px 정도는 안티앨리어싱을 위해 부드럽게 페이드한다.
 function insideSquircle(x, y, w, h) {
   const cx = w / 2;
@@ -110,6 +111,26 @@ function insideSquircle(x, y, w, h) {
   if (r <= 1 - edge) return 1;
   if (r >= 1 + edge) return 0;
   return 1 - (r - (1 - edge)) / (edge * 2);
+}
+
+// 스퀴클 바탕에서 우측 상단 모서리를 대각선으로 잘라낸 "태그" 실루엣.
+// 대칭적인 둥근 사각형과 달리 한쪽 모서리가 잘려 있어 실루엣만으로도
+// 구분되고, 체크리스트/태그 브랜드 이미지와도 맞아떨어진다.
+function insideBadge(x, y, w, h) {
+  const base = insideSquircle(x, y, w, h);
+  if (base <= 0) return 0;
+
+  const notch = Math.min(w, h) * 0.42; // 잘려나가는 삼각형 크기
+  const feather = Math.min(w, h) * 0.02;
+  const distFromCorner = w - x + y; // 우측 상단 모서리로부터의 대각 거리
+  const d = distFromCorner - notch;
+
+  let notchMask;
+  if (d <= -feather) notchMask = 0;
+  else if (d >= feather) notchMask = 1;
+  else notchMask = (d + feather) / (feather * 2);
+
+  return Math.min(base, notchMask);
 }
 
 /* ---------- 최소 PNG 인코더 ---------- */
