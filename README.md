@@ -15,7 +15,7 @@ Nocalhostmore는 코딩을 시작하기 **전에**, 소프트웨어 공학의 �
 | 대상 | 챗봇·에이전트 사용자 모두 | 챗봇 사용자 |
 | 진입 | `index.html` (랜딩) → `app.html` (생성기) | 툴바 아이콘 → `popup.html` |
 | 추가 기능 | 가이드(SEO), 히스토리, **스타터 레포 zip(Pro)**, 광고 | 없음(가볍게) |
-| 배포 | 정적 호스팅(Vercel·Netlify·GitHub Pages, 무료) | Chrome Web Store |
+| 배포 | Vercel(프로덕션) | Chrome Web Store |
 
 > **왜 웹사이트가 주력인가?** 에이전트형 사용자(Cursor·Claude Code)는 브라우저가 아니라 IDE에 삽니다.
 > 확장은 그들에게 닿지 않지만, 사이트는 복사→붙여넣기로 두 부류를 모두 커버합니다.
@@ -61,16 +61,12 @@ Nocalhostmore는 코딩을 시작하기 **전에**, 소프트웨어 공학의 �
 python3 -m http.server 8000
 # http://localhost:8000/ (랜딩) · /app.html (생성기) · /guides/ (가이드)
 ```
-#### 지금 라이브 (GitHub Pages · 자동)
-기본 브랜치에 push 하면 `.github/workflows/deploy-pages.yml`이 자동으로 배포합니다.
-- URL: `https://baebae6ae.github.io/nocalhostmore/`
-- 내부 링크가 모두 상대경로라 서브패스에서도 정상 동작합니다.
+#### 지금 라이브 (Vercel)
+기본 브랜치에 push 하면 Vercel이 자동으로 프로덕션에 배포합니다.
 
-#### "정식 서비스"로 승격 (Vercel + 커스텀 도메인, 추천)
-가장 프로처럼 보이는 방법은 **Vercel + 내 도메인**입니다(서버리스 함수로 나중에 결제도 가능).
-1. [vercel.com](https://vercel.com) 로그인 → **Add New → Project** → 이 저장소 Import (빌드 설정 없음, Framework: Other)
-   - 저장소에 `vercel.json`(clean URLs)이 포함돼 있어 별도 빌드 설정이 필요 없습니다. 기본 브랜치가 자동으로 프로덕션이 됩니다.
-2. 배포되면 `xxx.vercel.app` 즉시 생성. **Settings → Domains**에서 구입한 도메인 연결(HTTPS 자동)
+#### 커스텀 도메인 연결
+1. 도메인 구입 (예: Vercel 도메인 탭에서 바로 구매 가능)
+2. Vercel 프로젝트 **Settings → Domains**에서 연결(HTTPS 자동)
 3. `robots.txt`·`sitemap.xml`의 도메인을 실제 값으로 교체
 
 #### Google AdSense 신청 절차
@@ -194,7 +190,6 @@ nocalhostmore/
 ├── icons/                 # PNG 아이콘 (16/32/48/128)
 ├── vercel.json            # Vercel 배포 설정(clean URLs)
 ├── robots.txt · sitemap.xml · ads.txt
-├── .github/workflows/deploy-pages.yml   # GitHub Pages 자동 배포(대안 호스팅)
 └── scripts/
     ├── gen-icons.cjs      # 무의존성 PNG 아이콘 생성기
     └── test.mjs           # 순수 로직 스모크 테스트
